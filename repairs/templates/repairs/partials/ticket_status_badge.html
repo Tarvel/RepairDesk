@@ -1,0 +1,33 @@
+{% if ticket.state == 'intake' %}
+<span class="status-badge bg-blue-50 text-blue-700 border-blue-100">
+    <span class="status-dot bg-blue-500"></span> Intake
+</span>
+{% elif ticket.state == 'diagnosing' %}
+<span class="status-badge bg-yellow-50 text-yellow-700 border-yellow-100">
+    <span class="status-dot bg-yellow-500"></span> Diagnosing
+</span>
+{% elif ticket.state == 'awaiting_approval' %}
+<span class="status-badge bg-purple-50 text-purple-700 border-purple-100">
+    <span class="status-dot bg-purple-500"></span> Approval
+</span>
+{% elif ticket.state == 'repairing' %}
+<span class="status-badge bg-indigo-50 text-indigo-700 border-indigo-100">
+    <span class="status-dot bg-indigo-500"></span> Repairing
+</span>
+{% elif ticket.state == 'pending_qc' %}
+<span class="status-badge bg-orange-50 text-orange-700 border-orange-100">
+    <span class="status-dot bg-orange-500"></span> QC Pending
+</span>
+{% elif ticket.state == 'ready' %}
+<span class="status-badge bg-green-50 text-green-700 border-green-100">
+    <span class="status-dot bg-green-500"></span> Ready
+</span>
+{% elif ticket.state == 'completed' %}
+<span class="status-badge bg-gray-100 text-gray-700 border-gray-200">
+    <span class="status-dot bg-gray-500"></span> Completed
+</span>
+{% else %}
+<span class="status-badge bg-gray-50 text-gray-700 border-gray-200">
+    {{ ticket.get_state_display }}
+</span>
+{% endif %}

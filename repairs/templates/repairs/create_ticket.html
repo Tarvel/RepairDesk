@@ -1,0 +1,193 @@
+{% extends 'repairs/base.html' %}
+
+{% block title %}New Intake - RepairDesk{% endblock %}
+{% block page_title %}New Repair Intake{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <form method="post" enctype="multipart/form-data" class="space-y-6" novalidate>
+        {% csrf_token %}
+        
+        <!-- Customer Section -->
+        {% if not customer %}
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div class="space-y-4">
+                <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2 mb-2 border-b border-gray-100 pb-2">
+                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    Customer Information
+                </h2>
+                
+                <!-- HTMX Customer Search -->
+                <div class="relative mb-4">
+                    <label for="customer-search-input" class="block text-sm font-medium text-gray-700 mb-1">Search Existing Customer</label>
+                    <input type="search" 
+                           name="customer_search"
+                           id="customer-search-input"
+                           hx-get="{% url 'repairs:customer_search' %}"
+                           hx-trigger="input changed delay:300ms, focus"
+                           hx-target="#customer-search-results"
+                           hx-swap="innerHTML"
+                           placeholder="Start typing name or phone..."
+                           autocomplete="off"
+                           class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-400 focus:border-gray-400 focus:outline-none transition-colors"
+                           autofocus>
+                    <div id="customer-search-results" class="absolute z-50 w-full top-full left-0 mt-1"></div>
+                </div>
+                
+                <div class="relative py-4"><div class="absolute inset-0 flex items-center" aria-hidden="true"><div class="w-full border-t border-gray-200"></div></div><div class="relative flex justify-center"><span class="bg-white px-3 text-xs font-semibold text-gray-500 tracking-wider">OR CREATE NEW CUSTOMER</span></div></div>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="id_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+                        {{ customer_form.name }}
+                    </div>
+                    <div>
+                        <label for="id_phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number <span class="text-red-500">*</span></label>
+                        {{ customer_form.phone }}
+                    </div>
+                    <div>
+                        <label for="id_email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        {{ customer_form.email }}
+                    </div>
+                    <div>
+                        <label for="id_address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        {{ customer_form.address }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3" role="status">
+            <svg class="w-6 h-6 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-green-800"><strong>Customer:</strong> {{ customer.name }} ({{ customer.phone }})</span>
+        </div>
+        {% endif %}
+        
+        <!-- Device Section -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div class="space-y-4">
+                <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2 mb-2 border-b border-gray-100 pb-2">
+                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    Device Information
+                </h2>
+                
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label for="id_brand" class="block text-sm font-medium text-gray-700 mb-1">Brand <span class="text-red-500">*</span></label>
+                        {{ device_form.brand }}
+                    </div>
+                    <div>
+                        <label for="id_model_name" class="block text-sm font-medium text-gray-700 mb-1">Model <span class="text-red-500">*</span></label>
+                        {{ device_form.model_name }}
+                    </div>
+                    <div>
+                        <label for="id_serial_number" class="block text-sm font-medium text-gray-700 mb-1">Serial Number</label>
+                        {{ device_form.serial_number }}
+                    </div>
+                </div>
+                
+                <!-- Physical Audit Section -->
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 flex items-start gap-3" role="alert">
+                    <svg class="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div>
+                        <p class="font-semibold text-amber-800">Physical Audit Required</p>
+                        <p class="text-amber-700 text-sm">Document all physical conditions for liability protection</p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="id_physical_condition" class="block text-sm font-medium text-gray-700 mb-1">Physical Condition <span class="text-red-500">*</span></label>
+                    {{ device_form.physical_condition }}
+                    <label class="block text-sm text-gray-700 mb-1">
+                        <span class="text-xs text-gray-500 mb-1 block">Document ALL scratches, dents, screen cracks, keyboard damage, etc.</span>
+                    </label>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                        {{ device_form.has_charger }}
+                        <span class="text-sm font-medium text-gray-700">Charger Received</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                        {{ device_form.has_battery }}
+                        <span class="text-sm font-medium text-gray-700">Battery Present</span>
+                    </label>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="id_additional_accessories" class="block text-sm font-medium text-gray-700 mb-1">Additional Accessories</label>
+                    {{ device_form.additional_accessories }}
+                </div>
+                
+                <!-- Photos -->
+                <div>
+                    <span class="block text-sm font-medium text-gray-700 mb-2">Condition Photos</span>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="id_photo_1" class="block text-sm font-medium text-gray-700 mb-1">Photo 1</label>
+                            {{ device_form.photo_1 }}
+                        </div>
+                        <div>
+                            <label for="id_photo_2" class="block text-sm font-medium text-gray-700 mb-1">Photo 2</label>
+                            {{ device_form.photo_2 }}
+                        </div>
+                        <div>
+                            <label for="id_photo_3" class="block text-sm font-medium text-gray-700 mb-1">Photo 3</label>
+                            {{ device_form.photo_3 }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ticket Section -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div class="space-y-4">
+                <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2 mb-2 border-b border-gray-100 pb-2">
+                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    Problem & Payment
+                </h2>
+                
+                <div class="mb-4">
+                    <label for="id_customer_complaint" class="block text-sm font-medium text-gray-700 mb-1">Customer Complaint <span class="text-red-500">*</span></label>
+                    {{ ticket_form.customer_complaint }}
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-4 items-end">
+                    <div>
+                        <label for="id_diagnostic_fee" class="block text-sm font-medium text-gray-700 mb-1">Diagnostic Fee (₦)</label>
+                        {{ ticket_form.diagnostic_fee }}
+                    </div>
+                    <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors h-12">
+                        {{ ticket_form.diagnostic_fee_paid }}
+                        <span class="text-sm font-medium text-gray-700">Diagnostic Fee Paid</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Submit -->
+        <div class="flex justify-end gap-4">
+            <a href="{% url 'repairs:dashboard' %}" class="btn-frappe-secondary cursor-pointer flex items-center gap-1">
+                Cancel
+            </a>
+            <button type="submit" class="btn-frappe-primary cursor-pointer flex items-center justify-center gap-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Create Ticket
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

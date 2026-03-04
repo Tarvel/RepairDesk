@@ -1,0 +1,31 @@
+<!-- Customer Search Results Dropdown -->
+{% if customers %}
+<div class="bg-white rounded-lg shadow-xl border border-gray-200 max-h-64 overflow-y-auto" role="listbox" aria-label="Search results">
+    {% for customer in customers %}
+    <a 
+        href="{% url 'repairs:create_ticket_for_customer' customer_id=customer.id %}"
+        class="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-100 last:border-b-0 focus:outline-none focus:bg-gray-50"
+        role="option"
+        tabindex="0"
+    >
+        <div class="avatar placeholder flex-shrink-0">
+            <div class="bg-slate-200 text-slate-600 rounded-full w-10 h-10 flex items-center justify-center">
+                <span class="font-medium">{{ customer.name|first|upper }}</span>
+            </div>
+        </div>
+        <div class="flex-1 min-w-0">
+            <p class="font-medium text-slate-900 truncate">{{ customer.name }}</p>
+            <p class="text-sm text-slate-500 truncate">{{ customer.phone }}</p>
+        </div>
+        <svg class="w-5 h-5 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+    </a>
+    {% endfor %}
+</div>
+{% elif query %}
+<div class="bg-white rounded-lg shadow-xl border border-gray-200 p-4 text-center" role="status">
+    <p class="text-slate-500">No customers found for "{{ query }}"</p>
+    <p class="text-sm text-slate-400 mt-1">Fill out the form below to create a new customer</p>
+</div>
+{% endif %}

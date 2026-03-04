@@ -1,0 +1,14 @@
+<!-- Ticket Status Section - Swapped via HTMX on transition -->
+<div class="flex flex-col items-end gap-3">
+    <!-- Current Status Badge -->
+    <div class="mb-2">
+        {% include 'repairs/partials/ticket_status_badge.html' %}
+    </div>
+    
+    <!-- Transition Buttons -->
+    {% if available_transitions %}
+    <div class="flex flex-col gap-2 w-full">
+        {% include 'repairs/partials/ticket_actions.html' %}
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,62 @@
+<!-- Notification dropdown partial - polled via HTMX -->
+<div class="relative" x-data="{ open: false }">
+    <!-- Bell icon with badge -->
+    <button @click="open = !open" class="p-2 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-50 relative">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+        </svg>
+        {% if unread_count > 0 %}
+        <span id="notif-badge" class="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center min-w-[18px] px-1">
+            {{ unread_count }}
+        </span>
+        {% endif %}
+    </button>
+
+    <!-- Dropdown panel -->
+    <div x-show="open" @click.away="open = false" x-cloak
+         x-transition:enter="transition ease-out duration-150"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-100"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95"
+         class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
+        
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+            <span class="text-sm font-semibold text-gray-800">Notifications</span>
+            {% if unread_count > 0 %}
+            <form hx-post="{% url 'repairs:mark_notifications_read' %}" hx-target="#notification-area" hx-swap="outerHTML">
+                <button type="submit" class="text-xs text-blue-600 hover:text-blue-800 font-medium">Mark all read</button>
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="max-h-72 overflow-y-auto divide-y divide-gray-100">
+            {% if notifications %}
+                {% for notif in notifications %}
+                <a href="{% url 'repairs:notification_click' notif.id %}" 
+                   class="block px-4 py-3 hover:bg-gray-50 transition-colors {% if not notif.is_read %}bg-blue-50/50{% endif %}">
+                    <div class="flex items-start gap-2.5">
+                        {% if not notif.is_read %}
+                        <div class="w-2 h-2 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></div>
+                        {% else %}
+                        <div class="w-2 h-2 mt-1.5 flex-shrink-0"></div>
+                        {% endif %}
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm text-gray-800 {% if not notif.is_read %}font-medium{% endif %} leading-snug">{{ notif.message }}</p>
+                            <p class="text-xs text-gray-400 mt-1">{{ notif.created_at|timesince }} ago</p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div class="px-4 py-8 text-center">
+                    <svg class="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    <p class="text-sm text-gray-400">No notifications yet</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

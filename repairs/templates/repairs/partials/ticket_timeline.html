@@ -1,0 +1,26 @@
+<!-- Timeline Item: Creation -->
+<div class="flex gap-4">
+    <div class="flex-shrink-0 mt-1">
+        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-600">
+            {{ ticket.device.customer.name.0|upper }}
+        </div>
+    </div>
+    <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+            <span class="font-medium text-gray-900 text-sm">{{ ticket.device.customer.name }}</span>
+            <span class="text-gray-500 text-xs">created this ticket</span>
+            <span class="text-gray-400 text-xs ml-auto">{{ ticket.created_at|timesince }} ago</span>
+        </div>
+        <div class="text-sm text-gray-600">
+            Ticket #{{ ticket.ticket_number }} created with status <span class="font-medium">Intake</span>.
+        </div>
+    </div>
+</div>
+
+<!-- Timeline Iteration (chronological: oldest first, newest at bottom) -->
+{% for note in ticket.notes.all reversed %}
+    {% include 'repairs/partials/ticket_note_single.html' %}
+{% endfor %}
+
+<!-- Timeline Bottom Anchor -->
+<div id="timeline-end"></div>

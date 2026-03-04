@@ -1,0 +1,162 @@
+<!-- Single Ticket Row Partial - Returned by HTMX transition from ticket list -->
+<tr class="hover" id="ticket-row-{{ ticket.id }}">
+    <td>
+        <a 
+            href="{% url 'repairs:ticket_detail' ticket.id %}" 
+            class="font-semibold text-primary-600 hover:text-primary-700 hover:underline cursor-pointer transition-smooth"
+        >
+            {{ ticket.ticket_number }}
+        </a>
+    </td>
+    <td>
+        <div class="flex items-center gap-3">
+            <div class="avatar placeholder">
+                <div class="bg-slate-200 text-slate-600 rounded-full w-10 h-10 flex items-center justify-center">
+                    <span class="font-medium">{{ ticket.device.customer.name|first|upper }}</span>
+                </div>
+            </div>
+            <div>
+                <div class="font-medium text-slate-900">{{ ticket.device.customer.name }}</div>
+                <div class="text-sm text-slate-500">{{ ticket.device.customer.phone }}</div>
+            </div>
+        </div>
+    </td>
+    <td class="text-slate-600">{{ ticket.device.brand }} {{ ticket.device.model_name }}</td>
+    <td>
+        {% if ticket.state == 'intake' %}
+        <span class="badge badge-info gap-1">{{ ticket.get_state_display }}</span>
+        {% elif ticket.state == 'diagnosing' %}
+        <span class="badge badge-warning gap-1">{{ ticket.get_state_display }}</span>
+        {% elif ticket.state == 'awaiting_approval' %}
+        <span class="badge badge-secondary gap-1">{{ ticket.get_state_display }}</span>
+        {% elif ticket.state == 'repairing' %}
+        <span class="badge badge-accent gap-1">{{ ticket.get_state_display }}</span>
+        {% elif ticket.state == 'pending_qc' %}
+        <span class="badge badge-primary gap-1">{{ ticket.get_state_display }}</span>
+        {% elif ticket.state == 'ready' %}
+        <span class="badge badge-success gap-1">{{ ticket.get_state_display }}</span>
+        {% elif ticket.state == 'completed' %}
+        <span class="badge badge-ghost gap-1">{{ ticket.get_state_display }}</span>
+        {% else %}
+        <span class="badge gap-1">{{ ticket.get_state_display }}</span>
+        {% endif %}
+    </td>
+    <td>
+        {% if ticket.assigned_technician %}
+        <div class="flex items-center gap-2">
+            <div class="avatar placeholder">
+                <div class="bg-primary-100 text-primary-600 rounded-full w-6 h-6 flex items-center justify-center">
+                    <span class="text-xs font-medium">{{ ticket.assigned_technician.username|first|upper }}</span>
+                </div>
+            </div>
+            <span class="text-slate-600">{{ ticket.assigned_technician.username }}</span>
+        </div>
+        {% else %}
+        <span class="text-slate-400">Unassigned</span>
+        {% endif %}
+    </td>
+    <td class="text-slate-500 text-sm">{{ ticket.created_at|date:"M d, Y" }}</td>
+    <td id="actions-{{ ticket.id }}">
+        {% if ticket.state == 'intake' %}
+        <button 
+            hx-post="{% url 'repairs:transition_ticket' ticket.id 'start_diagnosis' %}"
+            hx-target="#ticket-row-{{ ticket.id }}"
+            hx-swap="outerHTML"
+            hx-confirm="Start diagnosis for {{ ticket.ticket_number }}?"
+            class="btn btn-primary btn-sm cursor-pointer"
+            aria-label="Start diagnosis for ticket {{ ticket.ticket_number }}">
+            <span class="htmx-indicator loading loading-spinner loading-xs"></span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            Start Diagnosis
+        </button>
+        {% elif ticket.state == 'diagnosing' %}
+        <button 
+            hx-post="{% url 'repairs:transition_ticket' ticket.id 'request_approval' %}"
+            hx-target="#ticket-row-{{ ticket.id }}"
+            hx-swap="outerHTML"
+            hx-confirm="Request approval for {{ ticket.ticket_number }}?"
+            class="btn btn-warning btn-sm cursor-pointer"
+            aria-label="Request approval for ticket {{ ticket.ticket_number }}">
+            <span class="htmx-indicator loading loading-spinner loading-xs"></span>
+            Request Approval
+        </button>
+        {% elif ticket.state == 'awaiting_approval' %}
+        <div class="join">
+            <button 
+                hx-post="{% url 'repairs:transition_ticket' ticket.id 'approve_repair' %}"
+                hx-target="#ticket-row-{{ ticket.id }}"
+                hx-swap="outerHTML"
+                hx-confirm="Approve repair for {{ ticket.ticket_number }}?"
+                class="btn btn-success btn-sm join-item cursor-pointer"
+                aria-label="Approve repair for ticket {{ ticket.ticket_number }}">
+                <span class="htmx-indicator loading loading-spinner loading-xs"></span>
+                Approve
+            </button>
+            <button 
+                hx-post="{% url 'repairs:transition_ticket' ticket.id 'reject_repair' %}"
+                hx-target="#ticket-row-{{ ticket.id }}"
+                hx-swap="outerHTML"
+                hx-confirm="Reject repair for {{ ticket.ticket_number }}?"
+                class="btn btn-error btn-sm join-item cursor-pointer"
+                aria-label="Reject repair for ticket {{ ticket.ticket_number }}">
+                <span class="htmx-indicator loading loading-spinner loading-xs"></span>
+                Reject
+            </button>
+        </div>
+        {% elif ticket.state == 'repairing' %}
+        <button 
+            hx-post="{% url 'repairs:transition_ticket' ticket.id 'finish_repair' %}"
+            hx-target="#ticket-row-{{ ticket.id }}"
+            hx-swap="outerHTML"
+            hx-confirm="Mark repair as finished for {{ ticket.ticket_number }}?"
+            class="btn btn-accent btn-sm cursor-pointer"
+            aria-label="Finish repair for ticket {{ ticket.ticket_number }}">
+            <span class="htmx-indicator loading loading-spinner loading-xs"></span>
+            Finish Repair
+        </button>
+        {% elif ticket.state == 'pending_qc' %}
+        <div class="join">
+            <button 
+                hx-post="{% url 'repairs:transition_ticket' ticket.id 'pass_qc' %}"
+                hx-target="#ticket-row-{{ ticket.id }}"
+                hx-swap="outerHTML"
+                hx-confirm="Pass QC for {{ ticket.ticket_number }}?"
+                class="btn btn-success btn-sm join-item cursor-pointer"
+                aria-label="Pass QC for ticket {{ ticket.ticket_number }}">
+                <span class="htmx-indicator loading loading-spinner loading-xs"></span>
+                Pass QC
+            </button>
+            <button 
+                hx-post="{% url 'repairs:transition_ticket' ticket.id 'fail_qc' %}"
+                hx-target="#ticket-row-{{ ticket.id }}"
+                hx-swap="outerHTML"
+                hx-confirm="Fail QC for {{ ticket.ticket_number }}?"
+                class="btn btn-error btn-sm join-item cursor-pointer"
+                aria-label="Fail QC for ticket {{ ticket.ticket_number }}">
+                <span class="htmx-indicator loading loading-spinner loading-xs"></span>
+                Fail QC
+            </button>
+        </div>
+        {% elif ticket.state == 'ready' %}
+        <button 
+            hx-post="{% url 'repairs:transition_ticket' ticket.id 'mark_collected' %}"
+            hx-target="#ticket-row-{{ ticket.id }}"
+            hx-swap="outerHTML"
+            hx-confirm="Mark {{ ticket.ticket_number }} as collected?"
+            class="btn btn-success btn-sm cursor-pointer"
+            aria-label="Mark ticket {{ ticket.ticket_number }} as collected">
+            <span class="htmx-indicator loading loading-spinner loading-xs"></span>
+            Mark Collected
+        </button>
+        {% elif ticket.state == 'completed' %}
+        <span class="inline-flex items-center gap-1 text-green-600 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Completed
+        </span>
+        {% endif %}
+    </td>
+</tr>

@@ -1,0 +1,32 @@
+<!-- A Single TicketNote (Activity log or User Comment) -->
+<div class="flex gap-4 group">
+    <div class="flex-shrink-0 mt-1">
+        {% if note.note_type == 'system' %}
+        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        {% else %}
+        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-700">
+            {% if note.user %}{{ note.user.username.0|upper }}{% else %}?{% endif %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+            <span class="font-medium text-gray-900 text-sm">
+                {% if note.user %}{{ note.user.username }}{% else %}System{% endif %}
+            </span>
+            <span class="text-gray-500 text-xs">
+                {% if note.note_type == 'system' %}logged an activity{% else %}added a comment{% endif %}
+            </span>
+            <span class="text-gray-400 text-xs ml-auto">{{ note.created_at|timesince }} ago</span>
+        </div>
+        
+        <div class="text-sm {% if note.note_type == 'system' %}text-gray-500 italic{% else %}text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100{% endif %}">
+            {{ note.content|linebreaksbr }}
+        </div>
+    </div>
+</div>

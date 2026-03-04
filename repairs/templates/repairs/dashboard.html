@@ -1,0 +1,79 @@
+{% extends 'repairs/base.html' %}
+
+{% block title %}Dashboard - RepairDesk{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Stats Cards - Minimalist -->
+    <div id="dashboard-stats" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        {% for state in state_data %}
+        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{{ state.name }}</div>
+            <div class="text-2xl font-bold text-gray-900">{{ state.count }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Recent Tickets -->
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Recent Activity</h3>
+            <a href="{% url 'repairs:ticket_list' %}" class="text-xs font-medium text-blue-600 hover:text-blue-800">View All</a>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                        <th class="px-6 py-3 w-20">ID</th>
+                        <th class="px-6 py-3">Subject</th>
+                        <th class="px-6 py-3 w-32">Status</th>
+                        <th class="px-6 py-3 w-48">Customer</th>
+                        <th class="px-6 py-3 w-32 text-right">Created</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for ticket in recent_tickets %}
+                    <tr class="hover:bg-gray-50 transition-colors cursor-pointer" onclick="window.location='{% url 'repairs:ticket_detail' ticket.id %}'">
+                        <td class="px-6 py-3 font-mono text-xs text-gray-500">#{{ ticket.ticket_number }}</td>
+                        <td class="px-6 py-3">
+                            <div class="font-medium text-gray-900 text-sm">{{ ticket.device.brand }} {{ ticket.device.model_name }}</div>
+                        </td>
+                        <td class="px-6 py-3">
+                            {% if ticket.state == 'intake' %}
+                            <span class="status-badge bg-blue-50 text-blue-700 border-blue-100">Intake</span>
+                            {% elif ticket.state == 'diagnosing' %}
+                            <span class="status-badge bg-yellow-50 text-yellow-700 border-yellow-100">Diagnosing</span>
+                            {% elif ticket.state == 'awaiting_approval' %}
+                            <span class="status-badge bg-purple-50 text-purple-700 border-purple-100">Approval</span>
+                            {% elif ticket.state == 'repairing' %}
+                            <span class="status-badge bg-indigo-50 text-indigo-700 border-indigo-100">Repairing</span>
+                            {% elif ticket.state == 'pending_qc' %}
+                            <span class="status-badge bg-orange-50 text-orange-700 border-orange-100">QC Pending</span>
+                            {% elif ticket.state == 'ready' %}
+                            <span class="status-badge bg-green-50 text-green-700 border-green-100">Ready</span>
+                            {% elif ticket.state == 'completed' %}
+                            <span class="status-badge bg-gray-100 text-gray-700 border-gray-200">Completed</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-3 text-sm text-gray-700">
+                            {{ ticket.device.customer.name }}
+                        </td>
+                        <td class="px-6 py-3 text-right text-xs text-gray-500">
+                            {{ ticket.created_at|timesince }} ago
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-500 text-sm">
+                            No recent activity
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

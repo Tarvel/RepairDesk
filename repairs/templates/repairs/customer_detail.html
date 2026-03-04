@@ -1,0 +1,126 @@
+{% extends 'repairs/base.html' %}
+
+{% block title %}{{ customer.name }} - RepairDesk{% endblock %}
+{% block page_title %}Customer Details{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-6">
+    <!-- Customer Header -->
+    <div class="card bg-base-100 shadow-lg border border-gray-200">
+        <div class="card-body">
+            <div class="flex items-start justify-between flex-wrap gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-full bg-primary-600 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0" aria-hidden="true">
+                        {{ customer.name.0|upper }}
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">{{ customer.name }}</h1>
+                        <p class="text-slate-500">Customer since {{ customer.created_at|date:"F Y" }}</p>
+                    </div>
+                </div>
+                <a href="{% url 'repairs:create_ticket_for_customer' customer.id %}" class="btn btn-primary cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    New Ticket
+                </a>
+            </div>
+            
+            <dl class="grid md:grid-cols-3 gap-6 mt-6">
+                <div>
+                    <dt class="text-sm text-slate-500">Phone</dt>
+                    <dd class="font-medium text-slate-900 mt-1">{{ customer.phone }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm text-slate-500">Email</dt>
+                    <dd class="font-medium text-slate-900 mt-1">{{ customer.email|default:"-" }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm text-slate-500">Address</dt>
+                    <dd class="font-medium text-slate-900 mt-1">{{ customer.address|default:"-"|linebreaksbr }}</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+    
+    <!-- Devices & Tickets -->
+    <div class="card bg-base-100 shadow-lg border border-gray-200">
+        <div class="card-body">
+            <h2 class="card-title text-lg text-slate-900 flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                Devices & Repair History
+            </h2>
+            
+            {% for device in devices %}
+            <div class="border border-gray-200 rounded-lg p-4 mt-4">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <h3 class="font-semibold text-slate-900">{{ device.brand }} {{ device.model_name }}</h3>
+                        {% if device.serial_number %}
+                        <p class="text-sm text-slate-500 font-mono">S/N: {{ device.serial_number }}</p>
+                        {% endif %}
+                    </div>
+                    <span class="text-sm text-slate-500">
+                        Registered {{ device.created_at|date:"M d, Y" }}
+                    </span>
+                </div>
+                
+                {% if device.tickets.exists %}
+                <div class="space-y-2">
+                    {% for ticket in device.tickets.all %}
+                    <a 
+                        href="{% url 'repairs:ticket_detail' ticket.id %}" 
+                        class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-smooth cursor-pointer border border-gray-100"
+                    >
+                        <div class="flex items-center gap-3">
+                            {% if ticket.state == 'intake' %}
+                            <span class="badge badge-info badge-sm">{{ ticket.get_state_display }}</span>
+                            {% elif ticket.state == 'diagnosing' %}
+                            <span class="badge badge-warning badge-sm">{{ ticket.get_state_display }}</span>
+                            {% elif ticket.state == 'awaiting_approval' %}
+                            <span class="badge badge-secondary badge-sm">{{ ticket.get_state_display }}</span>
+                            {% elif ticket.state == 'repairing' %}
+                            <span class="badge badge-accent badge-sm">{{ ticket.get_state_display }}</span>
+                            {% elif ticket.state == 'pending_qc' %}
+                            <span class="badge badge-primary badge-sm">{{ ticket.get_state_display }}</span>
+                            {% elif ticket.state == 'ready' %}
+                            <span class="badge badge-success badge-sm">{{ ticket.get_state_display }}</span>
+                            {% elif ticket.state == 'completed' %}
+                            <span class="badge badge-ghost badge-sm">{{ ticket.get_state_display }}</span>
+                            {% else %}
+                            <span class="badge badge-sm">{{ ticket.get_state_display }}</span>
+                            {% endif %}
+                            <span class="text-sm font-semibold text-primary-600">{{ ticket.ticket_number }}</span>
+                        </div>
+                        <span class="text-sm text-slate-500">{{ ticket.created_at|date:"M d, Y" }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-sm text-slate-400">No repair tickets for this device</p>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="text-center py-12">
+                <svg class="w-12 h-12 text-slate-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <p class="text-slate-500 mt-3">No devices registered for this customer.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Back Button -->
+    <div class="flex justify-start">
+        <a href="{% url 'repairs:customer_list' %}" class="btn btn-ghost gap-2 cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Customers
+        </a>
+    </div>
+</div>
+{% endblock %}
