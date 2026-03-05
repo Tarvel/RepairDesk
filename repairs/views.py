@@ -495,9 +495,56 @@ def create_ticket(request, customer_id=None):
 
 @login_required
 def ticket_timeline(request, ticket_id):
-    """HTMX polling endpoint returning just the timeline feed."""
+    """HTMX polling endpoint returning timeline feed + OOB swaps for badge/actions/comment."""
     ticket = get_object_or_404(RepairTicket, id=ticket_id)
-    return render(request, 'repairs/partials/ticket_timeline.html', {'ticket': ticket})
+    
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    
+    # Render the main timeline
+    timeline_html = render_to_string(
+        'repairs/partials/ticket_timeline.html',
+        {'ticket': ticket},
+        request=request
+    )
+    
+    # OOB: Status Badge
+    badge_html = render_to_string(
+        'repairs/partials/ticket_status_badge.html',
+        {'ticket': ticket},
+        request=request
+    )
+    
+    # OOB: Action Buttons (RBAC-aware)
+    available_transitions = get_available_transitions(ticket, request.user)
+    actions_html = render_to_string(
+        'repairs/partials/ticket_actions.html',
+        {'ticket': ticket, 'available_transitions': available_transitions},
+        request=request
+    )
+    
+    # OOB: Comment Box (hide when completed)
+    can_comment = is_frontdesk(request.user) or request.user == ticket.assigned_technician
+    show_comment = can_comment and ticket.state != RepairTicket.COMPLETED
+    comment_html = render_to_string(
+        'repairs/partials/ticket_comment_box.html',
+        {'ticket': ticket, 'show_comment': show_comment},
+        request=request
+    )
+    
+    # Combine: main content + OOB swaps
+    return HttpResponse(f'''
+        {timeline_html}
+        <div id="ticket-status-badge" hx-swap-oob="true">
+            {badge_html}
+        </div>
+        <div id="ticket-actions" class="flex flex-col gap-2" hx-swap-oob="true">
+            {actions_html}
+        </div>
+        <div id="comment-box" hx-swap-oob="true">
+            {comment_html}
+        </div>
+    ''')
 
 
 @login_required
@@ -628,8 +675,8 @@ def _create_transition_notifications(ticket, action, actor):
                 message=f"Repair for #{ticket.ticket_number} has been {verb} by {actor.get_full_name() or actor.username}"
             )
     elif action == 'finish_repair':
-        # Notify QA supervisors
-        qa_users = User.objects.filter(groups__name='Quality Analyst')
+        # Notify QA supervisors (both 'Quality Analyst' and 'Supervisor' groups)
+        qa_users = User.objects.filter(groups__name__in=['Quality Analyst', 'Supervisor']).distinct()
         for user in qa_users:
             Notification.objects.create(
                 recipient=user,

@@ -1,13 +1,18 @@
 {% load repairs_tags %}
 
 {% if ticket.state == 'intake' %}
-    {% if user|has_role:"Technician" or user.is_superuser %}
+    {% if ticket.assigned_technician and ticket.assigned_technician == user or user.is_superuser %}
     <button 
         hx-post="{% url 'repairs:transition_ticket' ticket.id 'start_diagnosis' %}"
         hx-swap="none"
         class="btn-frappe-primary w-full text-center">
         Start Diagnosis
     </button>
+    {% elif not ticket.assigned_technician %}
+    <div class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2.5 flex items-center gap-2">
+        <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.962-.833-2.732 0L4.072 16.5c-.77.833.192 2.5 1.732 2.5z"></path></svg>
+        Assign a technician first
+    </div>
     {% endif %}
 
 {% elif ticket.state == 'diagnosing' %}
@@ -54,7 +59,7 @@
     {% endif %}
 
 {% elif ticket.state == 'pending_qc' %}
-    {% if user|has_role:"Quality Analyst" or user.is_superuser %}
+    {% if user|has_role:"Quality Analyst" or user|has_role:"Supervisor" or user.is_superuser %}
     <div class="grid grid-cols-2 gap-2">
         <button 
             hx-post="{% url 'repairs:transition_ticket' ticket.id 'pass_qc' %}"

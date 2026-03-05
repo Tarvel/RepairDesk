@@ -54,25 +54,27 @@
                     });
                 </script>
                 
-                <!-- Comment Box Form -->
-                {% if can_comment and ticket.state != 'completed' %}
-                <div class="p-4 bg-gray-50 border-t border-gray-200 mt-auto sticky bottom-0">
-                    <form hx-post="{% url 'repairs:add_ticket_note' ticket.id %}" hx-target="#timeline-end" hx-swap="beforebegin" hx-on::after-request="if(event.detail.successful) this.reset()" class="flex gap-3">
-                        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-sm font-bold text-blue-600 flex-shrink-0">
-                            {{ request.user.username.0|upper }}
-                        </div>
-                        <div class="flex-1 relative">
-                            <textarea name="content" required rows="2" placeholder="Leave a comment or diagnostic note..." class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400"></textarea>
-                            <div class="flex justify-end mt-2">
-                                <button type="submit" class="btn-frappe-primary text-xs flex items-center gap-2">
-                                    <span class="htmx-indicator loading loading-spinner loading-xs"></span>
-                                    <span>Comment</span>
-                                </button>
+                <!-- Comment Box (updated via OOB swap from timeline poll) -->
+                <div id="comment-box">
+                    {% if can_comment and ticket.state != 'completed' %}
+                    <div class="p-4 bg-gray-50 border-t border-gray-200 mt-auto sticky bottom-0">
+                        <form hx-post="{% url 'repairs:add_ticket_note' ticket.id %}" hx-target="#timeline-end" hx-swap="beforebegin" hx-on::after-request="if(event.detail.successful) this.reset()" class="flex gap-3">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-sm font-bold text-blue-600 flex-shrink-0">
+                                {{ request.user.username.0|upper }}
                             </div>
-                        </div>
-                    </form>
+                            <div class="flex-1 relative">
+                                <textarea name="content" required rows="2" placeholder="Leave a comment or diagnostic note..." class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400"></textarea>
+                                <div class="flex justify-end mt-2">
+                                    <button type="submit" class="btn-frappe-primary text-xs flex items-center gap-2">
+                                        <span class="htmx-indicator loading loading-spinner loading-xs"></span>
+                                        <span>Comment</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
 
             <!-- Tab: Device Details -->

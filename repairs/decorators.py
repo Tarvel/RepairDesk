@@ -9,7 +9,7 @@ def is_technician(user):
     return user.is_authenticated and (user.is_superuser or user.groups.filter(name='Technician').exists())
 
 def is_qa_supervisor(user):
-    return user.is_authenticated and (user.is_superuser or user.groups.filter(name='Quality Analyst').exists())
+    return user.is_authenticated and (user.is_superuser or user.groups.filter(name__in=['Quality Analyst', 'Supervisor']).exists())
 
 def role_required(test_func, error_message="You don't have permission to perform this action."):
     def decorator(view_func):
