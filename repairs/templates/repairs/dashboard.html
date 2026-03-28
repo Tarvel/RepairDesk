@@ -23,7 +23,7 @@
         </div>
         
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse responsive-table">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500 font-semibold">
                         <th class="px-6 py-3 w-20">ID</th>
@@ -36,11 +36,11 @@
                 <tbody class="divide-y divide-gray-100">
                     {% for ticket in recent_tickets %}
                     <tr class="hover:bg-gray-50 transition-colors cursor-pointer" onclick="window.location='{% url 'repairs:ticket_detail' ticket.id %}'">
-                        <td class="px-6 py-3 font-mono text-xs text-gray-500">#{{ ticket.ticket_number }}</td>
-                        <td class="px-6 py-3">
+                        <td data-label="ID" class="px-6 py-3 font-mono text-xs text-gray-500">#{{ ticket.ticket_number }}</td>
+                        <td data-label="Device" class="px-6 py-3">
                             <div class="font-medium text-gray-900 text-sm">{{ ticket.device.brand }} {{ ticket.device.model_name }}</div>
                         </td>
-                        <td class="px-6 py-3">
+                        <td data-label="Status" class="px-6 py-3">
                             {% if ticket.state == 'intake' %}
                             <span class="status-badge bg-blue-50 text-blue-700 border-blue-100">Intake</span>
                             {% elif ticket.state == 'diagnosing' %}
@@ -57,10 +57,10 @@
                             <span class="status-badge bg-gray-100 text-gray-700 border-gray-200">Completed</span>
                             {% endif %}
                         </td>
-                        <td class="px-6 py-3 text-sm text-gray-700">
+                        <td data-label="Customer" class="px-6 py-3 text-sm text-gray-700">
                             {{ ticket.device.customer.name }}
                         </td>
-                        <td class="px-6 py-3 text-right text-xs text-gray-500">
+                        <td data-label="Created" class="px-6 py-3 text-right text-xs text-gray-500">
                             {{ ticket.created_at|timesince }} ago
                         </td>
                     </tr>

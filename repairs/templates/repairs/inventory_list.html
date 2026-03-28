@@ -6,21 +6,21 @@
 {% block content %}
 <div class="flex flex-col h-full">
     <!-- Toolbar -->
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
         <div class="flex items-center gap-2">
-            <h2 class="text-xl font-semibold text-gray-800">Parts Inventory</h2>
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Parts Inventory</h2>
             <span class="px-2 py-0.5 rounded-full bg-gray-200 text-xs font-medium text-gray-600">{{ items|length }}</span>
         </div>
         
-        <div class="flex items-center gap-2">
-            <form method="get" class="flex items-center gap-2">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <form method="get" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                 <div class="relative">
                     <input type="text" name="q" value="{{ search }}" placeholder="Part Name, SKU..." 
-                           class="pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-400 focus:border-gray-400 w-64">
-                    <svg class="w-4 h-4 text-gray-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                           class="pl-8 pr-3 py-2 sm:py-1.5 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-400 focus:border-gray-400 w-full sm:w-64">
+                    <svg class="w-4 h-4 text-gray-400 absolute left-2.5 top-2.5 sm:top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
                 
-                <label class="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-md bg-white cursor-pointer hover:bg-gray-50">
+                <label class="flex items-center gap-2 px-3 py-2 sm:py-1.5 border border-gray-300 rounded-md bg-white cursor-pointer hover:bg-gray-50">
                     <input type="checkbox" name="low_stock" {% if request.GET.low_stock %}checked{% endif %} onchange="this.form.submit()" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                     <span class="text-sm text-gray-600">Low Stock</span>
                 </label>
@@ -31,7 +31,7 @@
     <!-- Data Grid -->
     <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse responsive-table">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500 font-semibold">
                         <th class="px-4 py-3">Part Name</th>
@@ -45,21 +45,21 @@
                 <tbody class="divide-y divide-gray-100">
                     {% for item in items %}
                     <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-4 py-2.5">
+                        <td data-label="Part" class="px-4 py-2.5">
                             <div class="font-medium text-gray-900 text-sm">{{ item.part_name }}</div>
                             {% if item.description %}
                             <div class="text-xs text-gray-500 truncate max-w-xs">{{ item.description }}</div>
                             {% endif %}
                         </td>
-                        <td class="px-4 py-2.5 font-mono text-xs text-gray-500">{{ item.sku }}</td>
-                        <td class="px-4 py-2.5 text-center">
+                        <td data-label="SKU" class="px-4 py-2.5 font-mono text-xs text-gray-500">{{ item.sku }}</td>
+                        <td data-label="Available" class="px-4 py-2.5 text-center">
                             <span class="font-medium {% if item.needs_reorder %}text-red-600{% else %}text-gray-900{% endif %}">
                                 {{ item.available_quantity }}
                             </span>
                         </td>
-                        <td class="px-4 py-2.5 text-center text-gray-500">{{ item.reserved_quantity }}</td>
-                        <td class="px-4 py-2.5 text-right font-medium text-gray-900">₦{{ item.unit_price|floatformat:2 }}</td>
-                        <td class="px-4 py-2.5">
+                        <td data-label="Reserved" class="px-4 py-2.5 text-center text-gray-500">{{ item.reserved_quantity }}</td>
+                        <td data-label="Price" class="px-4 py-2.5 text-right font-medium text-gray-900">₦{{ item.unit_price|floatformat:2 }}</td>
+                        <td data-label="Status" class="px-4 py-2.5">
                             {% if item.needs_reorder %}
                             <span class="status-badge bg-red-50 text-red-700 border-red-100">
                                 <span class="status-dot bg-red-500"></span> Low Stock

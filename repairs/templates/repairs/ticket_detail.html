@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-12 gap-6 h-full">
+<div class="grid grid-cols-12 gap-4 sm:gap-6 h-full">
     <!-- Left Column: Activity & Communication (8 cols) -->
     <div class="col-span-12 lg:col-span-8 flex flex-col gap-6">
         <!-- Header Card -->
@@ -46,10 +46,17 @@
                 </div>
                 
                 <script>
-                    // Auto-scroll timeline to bottom after each HTMX swap
+                    // Auto-scroll timeline to bottom after HTMX swap,
+                    // but ONLY if the user is already near the bottom.
+                    // This avoids yanking them down while reading older activity.
                     document.addEventListener('htmx:afterSettle', function(evt) {
                         if (evt.detail.target && evt.detail.target.id === 'ticket-timeline') {
-                            evt.detail.target.scrollTop = evt.detail.target.scrollHeight;
+                            var el = evt.detail.target;
+                            var distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+                            // Only auto-scroll if within 150px of the bottom
+                            if (distanceFromBottom < 150) {
+                                el.scrollTop = el.scrollHeight;
+                            }
                         }
                     });
                 </script>
