@@ -25,6 +25,29 @@
             <p class="text-red-600 text-sm">Invalid username or password. Please try again.</p>
         </div>
         {% endif %}
+
+        <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
+            <p class="text-blue-800 text-sm font-semibold">Demo Access</p>
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-700 w-24">Username</span>
+                <input id="demo-username" type="text" value="tester" readonly
+                       class="flex-1 px-3 py-2 border border-blue-200 rounded-md text-sm bg-white text-gray-800">
+                <button type="button" onclick="copyCredential('demo-username')"
+                        class="px-3 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                    Copy
+                </button>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-700 w-24">Password</span>
+                <input id="demo-password" type="text" value="testing419" readonly
+                       class="flex-1 px-3 py-2 border border-blue-200 rounded-md text-sm bg-white text-gray-800">
+                <button type="button" onclick="copyCredential('demo-password')"
+                        class="px-3 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                    Copy
+                </button>
+            </div>
+        </div>
+        
         
         <form method="post" class="space-y-6">
             {% csrf_token %}
@@ -60,5 +83,23 @@
             RepairDesk Enterprise Edition v1.0
         </p>
     </div>
+
+    <script>
+        function copyCredential(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) {
+                return;
+            }
+
+            input.select();
+            input.setSelectionRange(0, 99999);
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(input.value);
+            } else {
+                document.execCommand('copy');
+            }
+        }
+    </script>
 </body>
 </html>
