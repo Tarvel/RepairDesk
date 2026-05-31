@@ -21,3 +21,5 @@ staticfiles/
 .vscode/
 .idea/
 db.sqlite3
+docs
+reference

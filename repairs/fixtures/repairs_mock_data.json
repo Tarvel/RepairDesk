@@ -1,0 +1,947 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "admin",
+      "first_name": "Admin",
+      "last_name": "User",
+      "email": "admin@repairdesk.co",
+      "is_staff": true,
+      "is_active": true,
+      "is_superuser": true,
+      "date_joined": "2026-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "sarah",
+      "first_name": "Sarah",
+      "last_name": "Adegoke",
+      "email": "sarah@repairdesk.co",
+      "is_staff": true,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-01-02T09:30:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "tai",
+      "first_name": "Taiwo",
+      "last_name": "Olawale",
+      "email": "tai@repairdesk.co",
+      "is_staff": true,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-01-03T10:15:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "username": "jessica",
+      "first_name": "Jessica",
+      "last_name": "Chen",
+      "email": "jessica@repairdesk.co",
+      "is_staff": true,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-01-05T11:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.customer",
+    "pk": "8a7b9c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d",
+    "fields": {
+      "name": "Chinedu Okeke",
+      "phone": "+234 803 123 4567",
+      "email": "chinedu.okeke@yahoo.com",
+      "address": "Block 4, Flat 12, Lekki Gardens Phase 3, Lekki, Lagos",
+      "created_at": "2026-05-20T09:00:00Z",
+      "updated_at": "2026-05-20T09:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.customer",
+    "pk": "7a6b5c4d-3e2f-1a0b-9c8d-7e6f5a4b3c2d",
+    "fields": {
+      "name": "Oluwaseun Adebayo",
+      "phone": "+234 812 345 6789",
+      "email": "seun.adebayo@gmail.com",
+      "address": "15, Toyin Street, Ikeja, Lagos",
+      "created_at": "2026-05-21T10:30:00Z",
+      "updated_at": "2026-05-21T10:30:00Z"
+    }
+  },
+  {
+    "model": "repairs.customer",
+    "pk": "6a5b4c3d-2e1f-0a9b-8c7d-6e5f4a3b2c1d",
+    "fields": {
+      "name": "Chioma Nwachukwu",
+      "phone": "+234 905 678 1234",
+      "email": "chioma.n@live.com",
+      "address": "Apartment 3B, Banana Island, Ikoyi, Lagos",
+      "created_at": "2026-05-22T11:45:00Z",
+      "updated_at": "2026-05-22T11:45:00Z"
+    }
+  },
+  {
+    "model": "repairs.customer",
+    "pk": "5a4b3c2d-1e0f-9a8b-7c6d-5e4f3a2b1c0d",
+    "fields": {
+      "name": "Sarah Jenkins",
+      "phone": "+234 708 987 6543",
+      "email": "sarah.jenkins@outlook.com",
+      "address": "42, Admiralty Way, Lekki Phase 1, Lagos",
+      "created_at": "2026-05-23T14:15:00Z",
+      "updated_at": "2026-05-23T14:15:00Z"
+    }
+  },
+  {
+    "model": "repairs.customer",
+    "pk": "4a3b2c1d-0e9f-8a7b-6c5d-4e3f2a1b0c9d",
+    "fields": {
+      "name": "Emeka Obi",
+      "phone": "+234 802 456 7890",
+      "email": "emeka.obi@gmail.com",
+      "address": "8, Oba Akran Avenue, Ikeja, Lagos",
+      "created_at": "2026-05-24T16:00:00Z",
+      "updated_at": "2026-05-24T16:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.customer",
+    "pk": "3a2b1c0d-9e8f-7a6b-5c4d-3e2f1a0b9c8d",
+    "fields": {
+      "name": "Fatima Abubakar",
+      "phone": "+234 809 111 2222",
+      "email": "fatima.abubakar@gmail.com",
+      "address": "88, Gwarinpa Estate, Abuja",
+      "created_at": "2026-05-25T12:00:00Z",
+      "updated_at": "2026-05-25T12:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.customer",
+    "pk": "2a1b0c9d-8e7f-6a5b-4c3d-2e1f0a9b8c7d",
+    "fields": {
+      "name": "Babajide Sanwo",
+      "phone": "+234 803 333 4444",
+      "email": "jide.sanwo@gov.ng",
+      "address": "Marina House, Lagos Island, Lagos",
+      "created_at": "2026-05-26T14:00:00Z",
+      "updated_at": "2026-05-26T14:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.customer",
+    "pk": "1a0b9c8d-7e6f-5a4b-3c2d-1e0f9a8b7c6d",
+    "fields": {
+      "name": "Amara Eke",
+      "phone": "+234 815 555 6666",
+      "email": "amara.eke@gloworld.com",
+      "address": "12, Awolowo Road, Ikoyi, Lagos",
+      "created_at": "2026-05-27T10:00:00Z",
+      "updated_at": "2026-05-27T10:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "11111111-2222-3333-4444-555555555555",
+    "fields": {
+      "customer": "8a7b9c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d",
+      "brand": "Apple",
+      "model_name": "iPhone 15 Pro Max",
+      "serial_number": "DNQFX0123L59",
+      "physical_condition": "Deep scratch on left side frame, rear glass completely shattered, front screen screen unresponsive.",
+      "has_charger": false,
+      "has_battery": true,
+      "additional_accessories": "Original Apple Clear Case",
+      "created_at": "2026-05-20T09:15:00Z",
+      "updated_at": "2026-05-20T09:15:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "22222222-3333-4444-5555-666666666666",
+    "fields": {
+      "customer": "7a6b5c4d-3e2f-1a0b-9c8d-7e6f5a4b3c2d",
+      "brand": "Samsung",
+      "model_name": "Galaxy S24 Ultra",
+      "serial_number": "R5CW3014B9X",
+      "physical_condition": "Minor scuffs on corners, charging port feels loose, battery drains extremely fast.",
+      "has_charger": true,
+      "has_battery": true,
+      "additional_accessories": "Charger block and braided cable",
+      "created_at": "2026-05-21T10:45:00Z",
+      "updated_at": "2026-05-21T10:45:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "33333333-4444-5555-6666-777777777777",
+    "fields": {
+      "customer": "6a5b4c3d-2e1f-0a9b-8c7d-6e5f4a3b2c1d",
+      "brand": "Apple",
+      "model_name": "MacBook Pro 16 (M3 Max)",
+      "serial_number": "C02F93JLMD6M",
+      "physical_condition": "Pristine casing, liquid spill reported near keyboard area. Screen displays black background.",
+      "has_charger": true,
+      "has_battery": true,
+      "additional_accessories": "Apple 140W MagSafe Charger",
+      "created_at": "2026-05-22T12:00:00Z",
+      "updated_at": "2026-05-22T12:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "44444444-5555-6666-7777-888888888888",
+    "fields": {
+      "customer": "5a4b3c2d-1e0f-9a8b-7c6d-5e4f3a2b1c0d",
+      "brand": "Sony",
+      "model_name": "PlayStation 5 Slim",
+      "serial_number": "FC829104889",
+      "physical_condition": "Dusty vents, HDMI port pins are severely bent and pushed inside.",
+      "has_charger": false,
+      "has_battery": false,
+      "additional_accessories": "1x DualSense White Controller",
+      "created_at": "2026-05-23T14:30:00Z",
+      "updated_at": "2026-05-23T14:30:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "55555555-6666-7777-8888-999999999999",
+    "fields": {
+      "customer": "4a3b2c1d-0e9f-8a7b-6c5d-4e3f2a1b0c9d",
+      "brand": "Apple",
+      "model_name": "iPad Pro 12.9",
+      "serial_number": "DLXQ712L9PM",
+      "physical_condition": "Cracked front glass digitizer, touch function is partially working in the center only.",
+      "has_charger": false,
+      "has_battery": true,
+      "additional_accessories": "Apple Pencil 2nd Gen",
+      "created_at": "2026-05-24T16:15:00Z",
+      "updated_at": "2026-05-24T16:15:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "66666666-7777-8888-9999-000000000000",
+    "fields": {
+      "customer": "3a2b1c0d-9e8f-7a6b-5c4d-3e2f1a0b9c8d",
+      "brand": "HP",
+      "model_name": "Spectre x360 14",
+      "serial_number": "5CD10293BX",
+      "physical_condition": "Extremely neat casing, screen replacement required due to vertical line. Fans are noisy.",
+      "has_charger": true,
+      "has_battery": true,
+      "additional_accessories": "HP Stylus Pen",
+      "created_at": "2026-05-25T12:15:00Z",
+      "updated_at": "2026-05-25T12:15:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "77777777-8888-9999-0000-111111111111",
+    "fields": {
+      "customer": "2a1b0c9d-8e7f-6a5b-4c3d-2e1f0a9b8c7d",
+      "brand": "Asus",
+      "model_name": "ROG Zephyrus G14",
+      "serial_number": "L9NRKD01824",
+      "physical_condition": "Scratches on bottom panel, missing 2 screws. Runs very hot during gaming, fans making clicking noise.",
+      "has_charger": true,
+      "has_battery": true,
+      "additional_accessories": "ROG Gaming Mouse",
+      "created_at": "2026-05-26T14:15:00Z",
+      "updated_at": "2026-05-26T14:15:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "88888888-9999-0000-1111-222222222222",
+    "fields": {
+      "customer": "1a0b9c8d-7e6f-5a4b-3c2d-1e0f9a8b7c6d",
+      "brand": "Nintendo",
+      "model_name": "Switch OLED",
+      "serial_number": "XTW10928374",
+      "physical_condition": "Left Joycon rail is wobbly. Screen has a tempered glass installed.",
+      "has_charger": false,
+      "has_battery": true,
+      "additional_accessories": "Joycon Straps",
+      "created_at": "2026-05-27T10:15:00Z",
+      "updated_at": "2026-05-27T10:15:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "99999999-0000-1111-2222-333333333333",
+    "fields": {
+      "customer": "8a7b9c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d",
+      "brand": "Apple",
+      "model_name": "iPhone 14 Pro",
+      "serial_number": "F1829038DLQ",
+      "physical_condition": "Cracked camera glass on main lens, minor frame scuffs on side buttons.",
+      "has_charger": false,
+      "has_battery": true,
+      "additional_accessories": "None",
+      "created_at": "2026-05-28T09:00:00Z",
+      "updated_at": "2026-05-28T09:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "00000000-1111-2222-3333-444444444444",
+    "fields": {
+      "customer": "7a6b5c4d-3e2f-1a0b-9c8d-7e6f5a4b3c2d",
+      "brand": "Samsung",
+      "model_name": "Galaxy Watch 6",
+      "serial_number": "W9102837LXD",
+      "physical_condition": "Pristine display, leather strap showing minor signs of wear. Watch won't turn on.",
+      "has_charger": true,
+      "has_battery": true,
+      "additional_accessories": "Magnetic charging puck",
+      "created_at": "2026-05-28T11:00:00Z",
+      "updated_at": "2026-05-28T11:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "12121212-3434-5656-7878-909090909090",
+    "fields": {
+      "customer": "6a5b4c3d-2e1f-0a9b-8c7d-6e5f4a3b2c1d",
+      "brand": "Lenovo",
+      "model_name": "ThinkPad X1 Carbon",
+      "serial_number": "PF102938DX",
+      "physical_condition": "Sticky keys on keyboard layout. Scuffs on palm rest.",
+      "has_charger": true,
+      "has_battery": true,
+      "additional_accessories": "Lenovo 65W USB-C Charger Block",
+      "created_at": "2026-05-28T14:00:00Z",
+      "updated_at": "2026-05-28T14:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.device",
+    "pk": "23232323-4545-6767-8989-010101010101",
+    "fields": {
+      "customer": "5a4b3c2d-1e0f-9a8b-7c6d-5e4f3a2b1c0d",
+      "brand": "Google",
+      "model_name": "Pixel 8 Pro",
+      "serial_number": "PX8P019283",
+      "physical_condition": "Camera glass bar scratched, display screen flickering green lines.",
+      "has_charger": false,
+      "has_battery": true,
+      "additional_accessories": "Spigen Rugged Case",
+      "created_at": "2026-05-28T16:00:00Z",
+      "updated_at": "2026-05-28T16:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.inventory",
+    "pk": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+    "fields": {
+      "part_name": "iPhone 15 Pro Max Screen Replacement (OEM)",
+      "sku": "INVP-IP15PM-SCR",
+      "description": "High-quality Super Retina XDR OLED replacement screen assembly with ceramic shield.",
+      "quantity": 12,
+      "reserved_quantity": 2,
+      "reorder_level": 4,
+      "unit_price": "185000.00",
+      "created_at": "2026-01-10T09:00:00Z",
+      "updated_at": "2026-05-25T10:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.inventory",
+    "pk": "bbbbbbbb-cccc-dddd-eeee-ffffffffffff",
+    "fields": {
+      "part_name": "Samsung Galaxy S24 Ultra USB-C Charging Port Board",
+      "sku": "INVP-S24U-CHG",
+      "description": "Genuine replacement sub-board assembly containing Type-C charging connector and microphone.",
+      "quantity": 25,
+      "reserved_quantity": 1,
+      "reorder_level": 5,
+      "unit_price": "24500.00",
+      "created_at": "2026-01-12T09:00:00Z",
+      "updated_at": "2026-05-25T10:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.inventory",
+    "pk": "cccccccc-dddd-eeee-ffff-000000000000",
+    "fields": {
+      "part_name": "MacBook Pro M3 Max Replacement Battery Pack",
+      "sku": "INVP-MBM3-BAT",
+      "description": "OEM replacement lithium polymer battery module for Apple MacBook Pro 16.",
+      "quantity": 8,
+      "reserved_quantity": 0,
+      "reorder_level": 2,
+      "unit_price": "95000.00",
+      "created_at": "2026-01-15T09:00:00Z",
+      "updated_at": "2026-05-25T10:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.inventory",
+    "pk": "dddddddd-eeee-ffff-0000-111111111111",
+    "fields": {
+      "part_name": "Sony PlayStation 5 OEM HDMI Port Socket",
+      "sku": "INVP-PS5-HDMI",
+      "description": "Specially designed PS5 19-pin HDMI port socket replacement connector.",
+      "quantity": 30,
+      "reserved_quantity": 3,
+      "reorder_level": 10,
+      "unit_price": "8500.00",
+      "created_at": "2026-01-20T09:00:00Z",
+      "updated_at": "2026-05-25T10:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.inventory",
+    "pk": "eeeeeeee-ffff-0000-1111-222222222222",
+    "fields": {
+      "part_name": "iPad Pro 12.9 Digitizer & Touch Screen Assembly",
+      "sku": "INVP-IPP12-DIG",
+      "description": "Premium multi-touch front glass screen digitizer replacement unit.",
+      "quantity": 3,
+      "reserved_quantity": 1,
+      "reorder_level": 2,
+      "unit_price": "72000.00",
+      "created_at": "2026-01-25T09:00:00Z",
+      "updated_at": "2026-05-25T10:00:00Z"
+    }
+  },
+  
+  
+  
+  {
+    "model": "repairs.repairticket",
+    "pk": "f1111111-1111-1111-1111-111111111111",
+    "fields": {
+      "ticket_number": "RD-20260520-0001",
+      "device": "11111111-2222-3333-4444-555555555555",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "intake",
+      "customer_complaint": "Phone dropped from balcony. Screen won't light up. Need screen change urgently.",
+      "technician_notes": "Device received at front desk. Intake audit complete. Waiting for technician queue.",
+      "diagnostic_fee": "7500.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "0.00",
+      "labor_cost": "0.00",
+      "deposit_paid": "0.00",
+      "balance_paid": false,
+      "warranty_days": 90,
+      "created_at": "2026-05-20T09:30:00Z",
+      "updated_at": "2026-05-20T09:30:00Z"
+    }
+  },
+  {
+    "model": "repairs.repairticket",
+    "pk": "f1212121-1212-1212-1212-121212121212",
+    "fields": {
+      "ticket_number": "RD-20260528-0001",
+      "device": "12121212-3434-5656-7878-909090909090",
+      "created_by": 2,
+      "assigned_technician": null,
+      "state": "intake",
+      "customer_complaint": "Spilled a small splash of soda. Keyboard letters 'A', 'S', 'D' not typing at all.",
+      "technician_notes": "Sticky keys confirmed. Requires detailed internal case audit and physical key mechanism rinse.",
+      "diagnostic_fee": "7500.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "0.00",
+      "labor_cost": "0.00",
+      "deposit_paid": "0.00",
+      "balance_paid": false,
+      "warranty_days": 90,
+      "created_at": "2026-05-28T14:15:00Z",
+      "updated_at": "2026-05-28T14:15:00Z"
+    }
+  },
+  {
+    "model": "repairs.repairticket",
+    "pk": "f1313131-1313-1313-1313-131313131313",
+    "fields": {
+      "ticket_number": "RD-20260528-0002",
+      "device": "23232323-4545-6767-8989-010101010101",
+      "created_by": 2,
+      "assigned_technician": null,
+      "state": "intake",
+      "customer_complaint": "Back camera bar glass shattered after a drop. Captures show blurry halos around lights.",
+      "technician_notes": "Awaiting physical diagnosis. Back camera bezel housing requires replacement.",
+      "diagnostic_fee": "7500.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "0.00",
+      "labor_cost": "0.00",
+      "deposit_paid": "0.00",
+      "balance_paid": false,
+      "warranty_days": 90,
+      "created_at": "2026-05-28T16:30:00Z",
+      "updated_at": "2026-05-28T16:30:00Z"
+    }
+  },
+  {
+    "model": "repairs.repairticket",
+    "pk": "f1414141-1414-1414-1414-141414141414",
+    "fields": {
+      "ticket_number": "RD-20260527-0001",
+      "device": "88888888-9999-0000-1111-222222222222",
+      "created_by": 2,
+      "assigned_technician": null,
+      "state": "intake",
+      "customer_complaint": "Left Joycon has severe drift. Characters move automatically inside game menus.",
+      "technician_notes": "Switch console checked in. Standard joystick modular block replacement slot booked.",
+      "diagnostic_fee": "5000.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "0.00",
+      "labor_cost": "0.00",
+      "deposit_paid": "0.00",
+      "balance_paid": false,
+      "warranty_days": 60,
+      "created_at": "2026-05-27T10:30:00Z",
+      "updated_at": "2026-05-27T10:30:00Z"
+    }
+  },
+  
+  
+  
+  {
+    "model": "repairs.repairticket",
+    "pk": "f2222222-2222-2222-2222-222222222222",
+    "fields": {
+      "ticket_number": "RD-20260521-0001",
+      "device": "22222222-3333-4444-5555-666666666666",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "diagnosing",
+      "customer_complaint": "Loose connection in charging port and high heat emissions during normal operation.",
+      "technician_notes": "Running battery capacity checks and checking voltage lines on sub-board. USB-C port pin wears detected.",
+      "diagnostic_fee": "7500.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "24500.00",
+      "labor_cost": "15000.00",
+      "deposit_paid": "0.00",
+      "balance_paid": false,
+      "warranty_days": 90,
+      "created_at": "2026-05-21T11:00:00Z",
+      "updated_at": "2026-05-21T14:00:00Z",
+      "diagnosed_at": "2026-05-21T13:45:00Z"
+    }
+  },
+  {
+    "model": "repairs.repairticket",
+    "pk": "f2323232-2323-2323-2323-232323232323",
+    "fields": {
+      "ticket_number": "RD-20260525-0001",
+      "device": "66666666-7777-8888-9999-000000000000",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "diagnosing",
+      "customer_complaint": "Screen screen shows bright pink vertical lines down the middle.",
+      "technician_notes": "Checking display flex gate connection. Screen panel driver chip appears damaged.",
+      "diagnostic_fee": "15000.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "120000.00",
+      "labor_cost": "30000.00",
+      "deposit_paid": "0.00",
+      "balance_paid": false,
+      "warranty_days": 120,
+      "created_at": "2026-05-25T12:30:00Z",
+      "updated_at": "2026-05-25T13:00:00Z"
+    }
+  },
+  {
+    "model": "repairs.repairticket",
+    "pk": "f2424242-2424-2424-2424-242424242424",
+    "fields": {
+      "ticket_number": "RD-20260526-0001",
+      "device": "77777777-8888-9999-0000-111111111111",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "diagnosing",
+      "customer_complaint": "Overheating issues and grinding mechanical noises from internal heatsink area.",
+      "technician_notes": "Fan ball bearings have collapsed. Thermal paste cured dry like cement. Awaiting fan part quote.",
+      "diagnostic_fee": "10000.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "12500.00",
+      "labor_cost": "20000.00",
+      "deposit_paid": "0.00",
+      "balance_paid": false,
+      "warranty_days": 90,
+      "created_at": "2026-05-26T14:30:00Z",
+      "updated_at": "2026-05-26T15:00:00Z"
+    }
+  },
+  
+  
+  
+  {
+    "model": "repairs.repairticket",
+    "pk": "f3333333-3333-3333-3333-333333333333",
+    "fields": {
+      "ticket_number": "RD-20260522-0001",
+      "device": "33333333-4444-5555-6666-777777777777",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "awaiting_approval",
+      "customer_complaint": "Spilled a glass of water on keyboard area. Screen went fully blank shortly after.",
+      "technician_notes": "Opened case, diagnosed heavy corrosion on backlight circuit track. Screen assembly requires replacement and logic board ultrasonic washing is mandatory.",
+      "diagnostic_fee": "15000.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "220000.00",
+      "labor_cost": "45000.00",
+      "deposit_paid": "0.00",
+      "balance_paid": false,
+      "warranty_days": 180,
+      "created_at": "2026-05-22T12:30:00Z",
+      "updated_at": "2026-05-22T16:00:00Z",
+      "diagnosed_at": "2026-05-22T15:30:00Z"
+    }
+  },
+  {
+    "model": "repairs.repairticket",
+    "pk": "f3434343-3434-3434-3434-343434343434",
+    "fields": {
+      "ticket_number": "RD-20260528-0003",
+      "device": "99999999-0000-1111-2222-333333333333",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "awaiting_approval",
+      "customer_complaint": "Rear glass shell completely shattered. Battery health metric sits at 72%.",
+      "technician_notes": "Laser machine removal required for rear glass. Battery replacement unit needed.",
+      "diagnostic_fee": "7500.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "48000.00",
+      "labor_cost": "18000.00",
+      "deposit_paid": "0.00",
+      "balance_paid": false,
+      "warranty_days": 90,
+      "created_at": "2026-05-28T09:15:00Z",
+      "updated_at": "2026-05-28T10:00:00Z",
+      "diagnosed_at": "2026-05-28T09:55:00Z"
+    }
+  },
+  
+  
+  
+  {
+    "model": "repairs.repairticket",
+    "pk": "f4444444-4444-4444-4444-444444444444",
+    "fields": {
+      "ticket_number": "RD-20260523-0001",
+      "device": "44444444-5555-6666-7777-888888888888",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "repairing",
+      "customer_complaint": "Console does not show picture on television. Power light turns blue to white but no output screen.",
+      "technician_notes": "Confirmed broken center pin inside HDMI socket. Approved by customer with deposit paid.",
+      "diagnostic_fee": "7500.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "8500.00",
+      "labor_cost": "25000.00",
+      "deposit_paid": "15000.00",
+      "balance_paid": false,
+      "warranty_days": 90,
+      "created_at": "2026-05-23T15:00:00Z",
+      "updated_at": "2026-05-24T09:00:00Z",
+      "diagnosed_at": "2026-05-23T17:00:00Z",
+      "approved_at": "2026-05-24T08:45:00Z"
+    }
+  },
+  {
+    "model": "repairs.repairticket",
+    "pk": "f4545454-4545-4545-4545-454545454545",
+    "fields": {
+      "ticket_number": "RD-20260528-0004",
+      "device": "00000000-1111-2222-3333-444444444444",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "repairing",
+      "customer_complaint": "Watch won't charge or turn on after being stored in a drawer for six months.",
+      "technician_notes": "Li-ion battery cell fully depleted below boot lock. Replacing battery pack.",
+      "diagnostic_fee": "5000.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "18000.00",
+      "labor_cost": "10000.00",
+      "deposit_paid": "10000.00",
+      "balance_paid": false,
+      "warranty_days": 90,
+      "created_at": "2026-05-28T11:15:00Z",
+      "updated_at": "2026-05-28T12:00:00Z",
+      "diagnosed_at": "2026-05-28T11:45:00Z",
+      "approved_at": "2026-05-28T11:55:00Z"
+    }
+  },
+  
+  
+  
+  {
+    "model": "repairs.repairticket",
+    "pk": "f5555555-5555-5555-5555-555555555555",
+    "fields": {
+      "ticket_number": "RD-20260524-0001",
+      "device": "55555555-6666-7777-8888-999999999999",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "pending_qc",
+      "customer_complaint": "iPad cracked screen assembly. Digitizer is severely broken.",
+      "technician_notes": "Completed digitizer and glass replacement. Re-assembled carefully. Awaiting supervisor QA validation.",
+      "diagnostic_fee": "7500.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "72000.00",
+      "labor_cost": "20000.00",
+      "deposit_paid": "40000.00",
+      "balance_paid": false,
+      "warranty_days": 90,
+      "created_at": "2026-05-24T16:30:00Z",
+      "updated_at": "2026-05-25T11:00:00Z",
+      "diagnosed_at": "2026-05-24T18:00:00Z",
+      "approved_at": "2026-05-25T09:00:00Z"
+    }
+  },
+  
+  
+  
+  {
+    "model": "repairs.repairticket",
+    "pk": "f6666666-6666-6666-6666-666666666666",
+    "fields": {
+      "ticket_number": "RD-20260524-0002",
+      "device": "11111111-2222-3333-4444-555555555555",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "ready",
+      "customer_complaint": "Clean housing and replace cracked camera lens cover.",
+      "technician_notes": "Lens cover replaced and micro-solder audit complete. Passes all QC benchmarks beautifully.",
+      "diagnostic_fee": "7500.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "15000.00",
+      "labor_cost": "15000.00",
+      "deposit_paid": "30000.00",
+      "balance_paid": true,
+      "warranty_days": 90,
+      "created_at": "2026-05-24T10:00:00Z",
+      "updated_at": "2026-05-25T16:00:00Z",
+      "diagnosed_at": "2026-05-24T11:00:00Z",
+      "approved_at": "2026-05-24T12:00:00Z"
+    }
+  },
+  
+  
+  
+  {
+    "model": "repairs.repairticket",
+    "pk": "f7777777-7777-7777-7777-777777777777",
+    "fields": {
+      "ticket_number": "RD-20260520-0002",
+      "device": "22222222-3333-4444-5555-666666666666",
+      "created_by": 2,
+      "assigned_technician": 3,
+      "state": "completed",
+      "customer_complaint": "Back shell cracked screen display needs repair.",
+      "technician_notes": "Installed premium OLED rear component package. Fully tested and collected by customer.",
+      "diagnostic_fee": "7500.00",
+      "diagnostic_fee_paid": true,
+      "parts_cost": "65000.00",
+      "labor_cost": "20000.00",
+      "deposit_paid": "85000.00",
+      "balance_paid": true,
+      "warranty_days": 90,
+      "created_at": "2026-05-20T10:00:00Z",
+      "updated_at": "2026-05-22T17:00:00Z",
+      "diagnosed_at": "2026-05-20T11:00:00Z",
+      "approved_at": "2026-05-20T12:00:00Z",
+      "completed_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  
+  
+  {
+    "model": "repairs.ticketnote",
+    "pk": "66666666-aaaa-bbbb-cccc-000000000000",
+    "fields": {
+      "ticket": "f1111111-1111-1111-1111-111111111111",
+      "user": 2,
+      "note_type": "comment",
+      "content": "Staff comment: Customer paid the diagnostic fee in cash at the counter. Sarah Jenkins processed the check-in and handed over the device for urgent slot booking.",
+      "created_at": "2026-05-20T09:35:00Z"
+    }
+  },
+  {
+    "model": "repairs.ticketnote",
+    "pk": "77777777-aaaa-bbbb-cccc-000000000000",
+    "fields": {
+      "ticket": "f2222222-2222-2222-2222-222222222222",
+      "user": 3,
+      "note_type": "comment",
+      "content": "Staff comment: Confirmed charging port pin corrosion on sub-board, recommending replacement of the full lower board assembly instead of just resoldering. Safe & more durable.",
+      "created_at": "2026-05-21T13:50:00Z"
+    }
+  },
+  {
+    "model": "repairs.ticketnote",
+    "pk": "88888888-aaaa-bbbb-cccc-000000000000",
+    "fields": {
+      "ticket": "f3333333-3333-3333-3333-333333333333",
+      "user": 3,
+      "note_type": "comment",
+      "content": "Staff comment: Liquid spill damage is extensive. Red indicator stickers have turned fully red inside. Board cleaning and screen renewal quotes dispatched to customer.",
+      "created_at": "2026-05-22T15:45:00Z"
+    }
+  },
+  {
+    "model": "repairs.ticketnote",
+    "pk": "99999999-aaaa-bbbb-cccc-000000000000",
+    "fields": {
+      "ticket": "f4444444-4444-4444-4444-444444444444",
+      "user": 3,
+      "note_type": "comment",
+      "content": "Staff comment: HDMI port successfully desoldered. Cleared the pads and installed a brand new high-grade HDMI slot. Testing output signal now.",
+      "created_at": "2026-05-24T10:30:00Z"
+    }
+  },
+  {
+    "model": "repairs.ticketnote",
+    "pk": "aaaaaaaa-aaaa-bbbb-cccc-000000000000",
+    "fields": {
+      "ticket": "f5555555-5555-5555-5555-555555555555",
+      "user": 3,
+      "note_type": "comment",
+      "content": "Staff comment: Glass digitizer installed successfully. Adhesives fully cured under UV clamp. Screen responsiveness test passed in all areas. Ready for supervisor audit.",
+      "created_at": "2026-05-25T10:45:00Z"
+    }
+  },
+  {
+    "model": "repairs.notification",
+    "pk": "00000000-1111-2222-3333-444444444444",
+    "fields": {
+      "recipient": 3,
+      "ticket": "f1111111-1111-1111-1111-111111111111",
+      "message": "New ticket RD-20260520-0001 (iPhone 15 Pro Max) assigned to you.",
+      "is_read": false,
+      "created_at": "2026-05-20T09:31:00Z"
+    }
+  },
+  {
+    "model": "repairs.notification",
+    "pk": "11111111-2222-3333-4444-555555555555",
+    "fields": {
+      "recipient": 4,
+      "ticket": "f5555555-5555-5555-5555-555555555555",
+      "message": "Ticket RD-20260524-0001 is pending quality check review.",
+      "is_read": false,
+      "created_at": "2026-05-25T11:05:00Z"
+    }
+  },
+  {
+    "model": "repairs.ticketcounter",
+    "pk": 1,
+    "fields": {
+      "date_str": "20260520",
+      "last_sequence": 2
+    }
+  },
+  {
+    "model": "repairs.ticketcounter",
+    "pk": 2,
+    "fields": {
+      "date_str": "20260521",
+      "last_sequence": 1
+    }
+  },
+  {
+    "model": "repairs.ticketcounter",
+    "pk": 3,
+    "fields": {
+      "date_str": "20260522",
+      "last_sequence": 1
+    }
+  },
+  {
+    "model": "repairs.ticketcounter",
+    "pk": 4,
+    "fields": {
+      "date_str": "20260523",
+      "last_sequence": 1
+    }
+  },
+  {
+    "model": "repairs.ticketcounter",
+    "pk": 5,
+    "fields": {
+      "date_str": "20260524",
+      "last_sequence": 2
+    }
+  },
+  {
+    "model": "repairs.ticketcounter",
+    "pk": 6,
+    "fields": {
+      "date_str": "20260525",
+      "last_sequence": 1
+    }
+  },
+  {
+    "model": "repairs.ticketcounter",
+    "pk": 7,
+    "fields": {
+      "date_str": "20260526",
+      "last_sequence": 1
+    }
+  },
+  {
+    "model": "repairs.ticketcounter",
+    "pk": 8,
+    "fields": {
+      "date_str": "20260527",
+      "last_sequence": 1
+    }
+  },
+  {
+    "model": "repairs.ticketcounter",
+    "pk": 9,
+    "fields": {
+      "date_str": "20260528",
+      "last_sequence": 4
+    }
+  },
+  {
+    "model": "repairs.userprofile",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "role": "admin"
+    }
+  },
+  {
+    "model": "repairs.userprofile",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "role": "frontdesk"
+    }
+  },
+  {
+    "model": "repairs.userprofile",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "role": "technician"
+    }
+  },
+  {
+    "model": "repairs.userprofile",
+    "pk": 4,
+    "fields": {
+      "user": 4,
+      "role": "supervisor"
+    }
+  }
+]

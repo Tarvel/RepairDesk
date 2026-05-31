@@ -2,14 +2,37 @@ from functools import wraps
 from django.contrib import messages
 from django.shortcuts import redirect
 
+from .models import UserProfile
+
 def is_frontdesk(user):
-    return user.is_authenticated and (user.is_superuser or user.groups.filter(name='Frontdesk').exists())
+    if not user.is_authenticated:
+        return False
+    if user.is_superuser:
+        return True
+    try:
+        return user.profile.role in ['frontdesk', 'admin']
+    except (UserProfile.DoesNotExist, AttributeError):
+        return False
 
 def is_technician(user):
-    return user.is_authenticated and (user.is_superuser or user.groups.filter(name='Technician').exists())
+    if not user.is_authenticated:
+        return False
+    if user.is_superuser:
+        return True
+    try:
+        return user.profile.role in ['technician', 'admin']
+    except (UserProfile.DoesNotExist, AttributeError):
+        return False
 
 def is_qa_supervisor(user):
-    return user.is_authenticated and (user.is_superuser or user.groups.filter(name__in=['Quality Analyst', 'Supervisor']).exists())
+    if not user.is_authenticated:
+        return False
+    if user.is_superuser:
+        return True
+    try:
+        return user.profile.role in ['supervisor', 'admin']
+    except (UserProfile.DoesNotExist, AttributeError):
+        return False
 
 def role_required(test_func, error_message="You don't have permission to perform this action."):
     def decorator(view_func):

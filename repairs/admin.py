@@ -123,3 +123,32 @@ class RepairTicketAdmin(admin.ModelAdmin):
 class TicketPartAdmin(admin.ModelAdmin):
     list_display = ['ticket', 'part', 'quantity', 'unit_price', 'total_price']
     raw_id_fields = ['ticket', 'part']
+
+
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth import get_user_model
+from .models import UserProfile
+
+User = get_user_model()
+
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    can_delete = False
+    verbose_name_plural = 'User Profile / Roles'
+
+try:
+    admin.site.unregister(User)
+except admin.sites.NotRegistered:
+    pass
+
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
+    inlines = [UserProfileInline]
+    list_display = BaseUserAdmin.list_display + ('get_role',)
+
+    def get_role(self, obj):
+        try:
+            return obj.profile.get_role_display()
+        except UserProfile.DoesNotExist:
+            return "-"
+    get_role.short_description = 'Role'

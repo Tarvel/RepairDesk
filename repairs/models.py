@@ -230,14 +230,19 @@ class RepairTicket(models.Model):
         return f"Ticket #{self.ticket_number} - {self.device}"
     
     def save(self, *args, **kwargs):
-        """Generate ticket number on first save."""
+        """Generate ticket number on first save in a transaction-safe manner."""
         if not self.ticket_number:
+            from django.db import transaction
             # Format: RD-YYYYMMDD-XXXX
             today = timezone.now().strftime('%Y%m%d')
-            count = RepairTicket.objects.filter(
-                ticket_number__startswith=f'RD-{today}'
-            ).count() + 1
-            self.ticket_number = f'RD-{today}-{count:04d}'
+            with transaction.atomic():
+                counter, created = TicketCounter.objects.select_for_update().get_or_create(
+                    date_str=today,
+                    defaults={'last_sequence': 0}
+                )
+                counter.last_sequence += 1
+                counter.save()
+                self.ticket_number = f'RD-{today}-{counter.last_sequence:04d}'
         super().save(*args, **kwargs)
     
     @property
@@ -459,4 +464,61 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.recipient.username}: {self.message[:60]}"
+
+
+class TicketCounter(models.Model):
+    """Monotonically increasing thread-safe counter for ticket numbers."""
+    date_str = models.CharField(max_length=8, unique=True, db_index=True)  # YYYYMMDD
+    last_sequence = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Ticket Counter"
+        verbose_name_plural = "Ticket Counters"
+
+    def __str__(self):
+        return f"{self.date_str}: {self.last_sequence}"
+
+
+class UserProfile(models.Model):
+    """User profile mapping custom roles for RepairDesk staff."""
+    
+    ROLE_CHOICES = [
+        ('admin', 'Admin/Manager'),
+        ('frontdesk', 'Frontdesk'),
+        ('technician', 'Technician'),
+        ('supervisor', 'QA Supervisor'),
+    ]
+    
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default='frontdesk',
+        db_index=True
+    )
+    
+    def __str__(self):
+        return f"{self.user.username} ({self.get_role_display()})"
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_or_save_user_profile(sender, instance, created, **kwargs):
+    """Ensure every User model instance has a matching UserProfile."""
+    if created:
+        role = 'admin' if instance.is_superuser else 'frontdesk'
+        UserProfile.objects.get_or_create(user=instance, defaults={'role': role})
+    else:
+        # Save profile if it exists, or create one if it was missing for legacy users
+        if not hasattr(instance, 'profile'):
+            role = 'admin' if instance.is_superuser else 'frontdesk'
+            UserProfile.objects.get_or_create(user=instance, defaults={'role': role})
+        else:
+            instance.profile.save()
 

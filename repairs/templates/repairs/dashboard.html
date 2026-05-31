@@ -1,22 +1,152 @@
 {% extends 'repairs/base.html' %}
 
 {% block title %}Dashboard - RepairDesk{% endblock %}
+
 {% block page_title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
-    <!-- Stats Cards - Minimalist -->
-    <div id="dashboard-stats" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-        {% for state in state_data %}
-        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-            <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{{ state.name }}</div>
-            <div class="text-2xl font-bold text-gray-900">{{ state.count }}</div>
+<div x-data="{ activeTab: localStorage.getItem('dashboardView') || 'board' }" 
+     class="space-y-4 h-full flex flex-col">
+     
+    <!-- Operational Kanban Header and View Switcher (Spacious premium padding) -->
+    <div class="flex justify-between items-center bg-white border border-gray-200/80 rounded-xl px-6 py-3 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div class="flex items-center gap-2">
+            <h3 class="text-xs font-black text-gray-900 uppercase tracking-wider">Operational Pipeline</h3>
+            <span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[9px] font-bold border border-gray-200/50">Live</span>
         </div>
-        {% endfor %}
+        
+        <!-- View Switcher Toggle -->
+        <div class="flex items-center gap-1 bg-gray-100 p-0.5 rounded-lg border border-gray-200 text-xs font-medium">
+            <button @click="activeTab = 'board'; localStorage.setItem('dashboardView', 'board');" 
+                    :class="activeTab === 'board' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/50' : 'text-gray-500 hover:text-gray-900'" 
+                    class="px-3 py-1 rounded-md transition-all duration-200">
+                Board View
+            </button>
+            <button @click="activeTab = 'list'; localStorage.setItem('dashboardView', 'list');" 
+                    :class="activeTab === 'list' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/50' : 'text-gray-500 hover:text-gray-900'" 
+                    class="px-3 py-1 rounded-md transition-all duration-200">
+                List View
+            </button>
+        </div>
     </div>
-    
-    <!-- Recent Tickets -->
-    <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+
+    <!-- 1. KANBAN BOARD VIEW (Perfectly scaled column height layout) -->
+    <div x-show="activeTab === 'board'" x-cloak class="flex-1 flex flex-col min-h-0">
+        <div class="flex gap-4 overflow-x-auto pb-3 pt-0.5 items-stretch min-h-[490px] scrollbar-thin select-none">
+            
+            <!-- COLUMN: INTAKE -->
+            <div class="flex-shrink-0 w-80 bg-gray-50/50 border border-gray-200/70 rounded-xl p-3 flex flex-col gap-2.5 h-[460px]">
+                <div class="flex justify-between items-center px-1">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Intake</h4>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-0.5 bg-gray-200/60 text-gray-600 rounded-full">{{ grouped_tickets.intake|length }}</span>
+                </div>
+                <div class="flex flex-col gap-2.5 overflow-y-auto max-h-[380px] scrollbar-none pr-0.5">
+                    {% for ticket in grouped_tickets.intake %}
+                        {% include 'repairs/partials/kanban_card.html' with ticket=ticket border_color="border-slate-200" %}
+                    {% empty %}
+                        <div class="text-center py-8 border border-dashed border-gray-200 rounded-lg text-xs text-gray-400 bg-white">No tickets in Intake</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- COLUMN: DIAGNOSING -->
+            <div class="flex-shrink-0 w-80 bg-blue-50/10 border border-blue-100 rounded-xl p-3 flex flex-col gap-2.5 h-[460px]">
+                <div class="flex justify-between items-center px-1">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Diagnosing</h4>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-0.5 bg-blue-100/60 text-blue-700 rounded-full">{{ grouped_tickets.diagnosing|length }}</span>
+                </div>
+                <div class="flex flex-col gap-2.5 overflow-y-auto max-h-[380px] scrollbar-none pr-0.5">
+                    {% for ticket in grouped_tickets.diagnosing %}
+                        {% include 'repairs/partials/kanban_card.html' with ticket=ticket border_color="border-blue-100" %}
+                    {% empty %}
+                        <div class="text-center py-8 border border-dashed border-gray-200 rounded-lg text-xs text-gray-400 bg-white">No tickets in Diagnosis</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- COLUMN: AWAITING APPROVAL -->
+            <div class="flex-shrink-0 w-80 bg-purple-50/10 border border-purple-100 rounded-xl p-3 flex flex-col gap-2.5 h-[460px]">
+                <div class="flex justify-between items-center px-1">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Awaiting Approval</h4>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-0.5 bg-purple-100/60 text-purple-700 rounded-full">{{ grouped_tickets.awaiting_approval|length }}</span>
+                </div>
+                <div class="flex flex-col gap-2.5 overflow-y-auto max-h-[380px] scrollbar-none pr-0.5">
+                    {% for ticket in grouped_tickets.awaiting_approval %}
+                        {% include 'repairs/partials/kanban_card.html' with ticket=ticket border_color="border-purple-100" %}
+                    {% empty %}
+                        <div class="text-center py-8 border border-dashed border-gray-200 rounded-lg text-xs text-gray-400 bg-white">No pending approvals</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- COLUMN: REPAIRING -->
+            <div class="flex-shrink-0 w-80 bg-indigo-50/10 border border-indigo-100 rounded-xl p-3 flex flex-col gap-2.5 h-[460px]">
+                <div class="flex justify-between items-center px-1">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Repairing</h4>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-0.5 bg-indigo-100/60 text-indigo-700 rounded-full">{{ grouped_tickets.repairing|length }}</span>
+                </div>
+                <div class="flex flex-col gap-2.5 overflow-y-auto max-h-[380px] scrollbar-none pr-0.5">
+                    {% for ticket in grouped_tickets.repairing %}
+                        {% include 'repairs/partials/kanban_card.html' with ticket=ticket border_color="border-indigo-100" %}
+                    {% empty %}
+                        <div class="text-center py-8 border border-dashed border-gray-200 rounded-lg text-xs text-gray-400 bg-white">No active repairs</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- COLUMN: PENDING QC -->
+            <div class="flex-shrink-0 w-80 bg-orange-50/10 border border-orange-100 rounded-xl p-3 flex flex-col gap-2.5 h-[460px]">
+                <div class="flex justify-between items-center px-1">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">QC Pending</h4>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-0.5 bg-orange-100/60 text-orange-700 rounded-full">{{ grouped_tickets.pending_qc|length }}</span>
+                </div>
+                <div class="flex flex-col gap-2.5 overflow-y-auto max-h-[380px] scrollbar-none pr-0.5">
+                    {% for ticket in grouped_tickets.pending_qc %}
+                        {% include 'repairs/partials/kanban_card.html' with ticket=ticket border_color="border-orange-100" %}
+                    {% empty %}
+                        <div class="text-center py-8 border border-dashed border-gray-200 rounded-lg text-xs text-gray-400 bg-white">No tickets in QC</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- COLUMN: READY FOR PICKUP -->
+            <div class="flex-shrink-0 w-80 bg-emerald-50/10 border border-emerald-100 rounded-xl p-3 flex flex-col gap-2.5 h-[460px]">
+                <div class="flex justify-between items-center px-1">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Ready</h4>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-0.5 bg-emerald-100/60 text-emerald-700 rounded-full">{{ grouped_tickets.ready|length }}</span>
+                </div>
+                <div class="flex flex-col gap-2.5 overflow-y-auto max-h-[380px] scrollbar-none pr-0.5">
+                    {% for ticket in grouped_tickets.ready %}
+                        {% include 'repairs/partials/kanban_card.html' with ticket=ticket border_color="border-emerald-100" %}
+                    {% empty %}
+                        <div class="text-center py-8 border border-dashed border-gray-200 rounded-lg text-xs text-gray-400 bg-white">No ready devices</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 2. RECENT ACTIVITY LIST VIEW -->
+    <div x-show="activeTab === 'list'" x-cloak class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden animate-fade-in-up">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Recent Activity</h3>
             <a href="{% url 'repairs:ticket_list' %}" class="text-xs font-medium text-blue-600 hover:text-blue-800">View All</a>
@@ -35,26 +165,40 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     {% for ticket in recent_tickets %}
-                    <tr class="hover:bg-gray-50 transition-colors cursor-pointer" onclick="window.location='{% url 'repairs:ticket_detail' ticket.id %}'">
+                    <tr class="hover:bg-gray-50 transition-colors cursor-pointer group" onclick="window.location='{% url 'repairs:ticket_detail' ticket.id %}'">
                         <td data-label="ID" class="px-6 py-3 font-mono text-xs text-gray-500">#{{ ticket.ticket_number }}</td>
                         <td data-label="Device" class="px-6 py-3">
                             <div class="font-medium text-gray-900 text-sm">{{ ticket.device.brand }} {{ ticket.device.model_name }}</div>
                         </td>
                         <td data-label="Status" class="px-6 py-3">
                             {% if ticket.state == 'intake' %}
-                            <span class="status-badge bg-blue-50 text-blue-700 border-blue-100">Intake</span>
+                            <span class="status-badge bg-blue-50 text-blue-700 border-blue-100">
+                                <span class="status-dot bg-blue-500"></span> Intake
+                            </span>
                             {% elif ticket.state == 'diagnosing' %}
-                            <span class="status-badge bg-yellow-50 text-yellow-700 border-yellow-100">Diagnosing</span>
+                            <span class="status-badge bg-yellow-50 text-yellow-700 border-yellow-100">
+                                <span class="status-dot bg-yellow-500"></span> Diagnosing
+                            </span>
                             {% elif ticket.state == 'awaiting_approval' %}
-                            <span class="status-badge bg-purple-50 text-purple-700 border-purple-100">Approval</span>
+                            <span class="status-badge bg-purple-50 text-purple-700 border-purple-100">
+                                <span class="status-dot bg-purple-500"></span> Approval
+                            </span>
                             {% elif ticket.state == 'repairing' %}
-                            <span class="status-badge bg-indigo-50 text-indigo-700 border-indigo-100">Repairing</span>
+                            <span class="status-badge bg-indigo-50 text-indigo-700 border-indigo-100">
+                                <span class="status-dot bg-indigo-500"></span> Repairing
+                            </span>
                             {% elif ticket.state == 'pending_qc' %}
-                            <span class="status-badge bg-orange-50 text-orange-700 border-orange-100">QC Pending</span>
+                            <span class="status-badge bg-orange-50 text-orange-700 border-orange-100">
+                                <span class="status-dot bg-orange-500"></span> QC Pending
+                            </span>
                             {% elif ticket.state == 'ready' %}
-                            <span class="status-badge bg-green-50 text-green-700 border-green-100">Ready</span>
+                            <span class="status-badge bg-green-50 text-green-700 border-green-100">
+                                <span class="status-dot bg-green-500"></span> Ready
+                            </span>
                             {% elif ticket.state == 'completed' %}
-                            <span class="status-badge bg-gray-100 text-gray-700 border-gray-200">Completed</span>
+                            <span class="status-badge bg-gray-100 text-gray-700 border-gray-200">
+                                <span class="status-dot bg-gray-500"></span> Completed
+                            </span>
                             {% endif %}
                         </td>
                         <td data-label="Customer" class="px-6 py-3 text-sm text-gray-700">
@@ -74,6 +218,11 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    
+    <!-- Stats Cards - Displayed below the Kanban board -->
+    <div id="dashboard-stats" hx-get="{% url 'repairs:dashboard_stats' %}" hx-trigger="every 10s" hx-swap="outerHTML" class="pt-2">
+        {% include 'repairs/partials/dashboard_stats.html' %}
     </div>
 </div>
 {% endblock %}

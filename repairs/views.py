@@ -41,15 +41,24 @@ def dashboard(request):
         for code, name in RepairTicket.STATE_CHOICES
     ]
     
-    # Get recent tickets
-    recent_tickets = RepairTicket.objects.select_related(
+    # Get all tickets to group by state for the Kanban Board view
+    all_tickets = RepairTicket.objects.select_related(
         'device', 'device__customer', 'assigned_technician'
-    ).order_by('-created_at')[:10]
+    ).order_by('-created_at')
+    
+    from collections import defaultdict
+    grouped_tickets = defaultdict(list)
+    for ticket in all_tickets:
+        grouped_tickets[ticket.state].append(ticket)
+    
+    # Get recent tickets (for compatibility with existing templates/activity log)
+    recent_tickets = all_tickets[:10]
     
     context = {
         'state_data': state_data,
         'recent_tickets': recent_tickets,
         'states': RepairTicket.STATE_CHOICES,
+        'grouped_tickets': dict(grouped_tickets),
     }
     return render(request, 'repairs/dashboard.html', context)
 
@@ -125,11 +134,11 @@ def ticket_detail(request, ticket_id):
     available_transitions = get_available_transitions(ticket, request.user)
     
     can_comment = is_frontdesk(request.user) or request.user == ticket.assigned_technician
-    is_authorized_assigner = is_frontdesk(request.user) or is_qa_supervisor(request.user)
+    is_authorized_assigner = is_frontdesk(request.user)
     
     from django.contrib.auth import get_user_model
     User = get_user_model()
-    technicians = User.objects.filter(groups__name='Technician')
+    technicians = User.objects.filter(Q(profile__role='technician') | Q(is_superuser=True)).distinct()
     
     context = {
         'ticket': ticket,
@@ -523,16 +532,7 @@ def ticket_timeline(request, ticket_id):
         request=request
     )
     
-    # OOB: Comment Box (hide when completed)
-    can_comment = is_frontdesk(request.user) or request.user == ticket.assigned_technician
-    show_comment = can_comment and ticket.state != RepairTicket.COMPLETED
-    comment_html = render_to_string(
-        'repairs/partials/ticket_comment_box.html',
-        {'ticket': ticket, 'show_comment': show_comment},
-        request=request
-    )
-    
-    # Combine: main content + OOB swaps
+    # Combine: main content + OOB swaps (no comment-box swap to avoid wiping user input)
     return HttpResponse(f'''
         {timeline_html}
         <div id="ticket-status-badge" hx-swap-oob="true">
@@ -540,9 +540,6 @@ def ticket_timeline(request, ticket_id):
         </div>
         <div id="ticket-actions" class="flex flex-col gap-2" hx-swap-oob="true">
             {actions_html}
-        </div>
-        <div id="comment-box" hx-swap-oob="true">
-            {comment_html}
         </div>
     ''')
 
@@ -586,8 +583,8 @@ def assign_technician(request, ticket_id):
     
     ticket = get_object_or_404(RepairTicket, id=ticket_id)
     
-    # Authorized assigners only
-    if not (is_frontdesk(request.user) or is_qa_supervisor(request.user)):
+    # Authorized assigners only (Frontdesk & Admin only)
+    if not is_frontdesk(request.user):
         return HttpResponse(
             f'<div class="text-red-500 text-xs mt-1">Error: You do not have permission to assign or unassign technicians.</div>'
             f'<div id="ticket-assignment" hx-swap-oob="true"> '
@@ -641,11 +638,11 @@ def assign_technician(request, ticket_id):
         )
         
     # We will return the updated Assignment UI block
-    is_authorized_assigner = is_frontdesk(request.user) or is_qa_supervisor(request.user)
+    is_authorized_assigner = is_frontdesk(request.user)
     
     context = {
         'ticket': ticket,
-        'technicians': User.objects.filter(groups__name='Technician'),
+        'technicians': User.objects.filter(Q(profile__role='technician') | Q(is_superuser=True)).distinct(),
         'is_authorized_assigner': is_authorized_assigner,
     }
     return render(request, 'repairs/partials/ticket_assignment.html', context)
@@ -658,7 +655,7 @@ def _create_transition_notifications(ticket, action, actor):
     
     if action == 'request_approval':
         # Notify all Frontdesk users
-        frontdesk_users = User.objects.filter(groups__name='Frontdesk')
+        frontdesk_users = User.objects.filter(Q(profile__role='frontdesk') | Q(is_superuser=True)).distinct()
         for user in frontdesk_users:
             Notification.objects.create(
                 recipient=user,
@@ -675,8 +672,8 @@ def _create_transition_notifications(ticket, action, actor):
                 message=f"Repair for #{ticket.ticket_number} has been {verb} by {actor.get_full_name() or actor.username}"
             )
     elif action == 'finish_repair':
-        # Notify QA supervisors (both 'Quality Analyst' and 'Supervisor' groups)
-        qa_users = User.objects.filter(groups__name__in=['Quality Analyst', 'Supervisor']).distinct()
+        # Notify QA supervisors
+        qa_users = User.objects.filter(Q(profile__role='supervisor') | Q(is_superuser=True)).distinct()
         for user in qa_users:
             Notification.objects.create(
                 recipient=user,
@@ -685,7 +682,7 @@ def _create_transition_notifications(ticket, action, actor):
             )
     elif action in ('pass_qc', 'fail_qc'):
         # Notify Frontdesk
-        frontdesk_users = User.objects.filter(groups__name='Frontdesk')
+        frontdesk_users = User.objects.filter(Q(profile__role='frontdesk') | Q(is_superuser=True)).distinct()
         verb = 'passed' if action == 'pass_qc' else 'failed'
         for user in frontdesk_users:
             Notification.objects.create(
@@ -710,7 +707,7 @@ def _create_comment_notifications(ticket, commenter):
             )
     elif is_technician(commenter):
         # Notify all Frontdesk users
-        frontdesk_users = User.objects.filter(groups__name='Frontdesk').exclude(id=commenter.id)
+        frontdesk_users = User.objects.filter(Q(profile__role='frontdesk') | Q(is_superuser=True)).exclude(id=commenter.id).distinct()
         for user in frontdesk_users:
             Notification.objects.create(
                 recipient=user,

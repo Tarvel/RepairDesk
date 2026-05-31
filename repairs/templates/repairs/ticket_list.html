@@ -1,7 +1,7 @@
 {% extends 'repairs/base.html' %}
 
 {% block title %}Tickets - RepairDesk{% endblock %}
-{% block page_title %}Tickets{% endblock %}
+{% block page_title %}{% endblock %}
 
 {% block content %}
 <div class="flex flex-col h-full">
@@ -13,14 +13,21 @@
         </div>
         
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-            <form method="get" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <form method="get" 
+                  hx-get="{% url 'repairs:ticket_list' %}" 
+                  hx-target="#ticket-table-container" 
+                  hx-select="#ticket-table-container"
+                  hx-trigger="submit, input from:input[name='q'] delay:200ms, change from:select[name='state']"
+                  hx-swap="outerHTML"
+                  hx-push-url="true"
+                  class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                 <div class="relative">
                     <input type="text" name="q" value="{{ search }}" placeholder="ID, Subject, Customer..." 
-                           class="pl-8 pr-3 py-2 sm:py-1.5 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-400 focus:border-gray-400 w-full sm:w-64">
+                           class="pl-8 pr-3 py-2 sm:py-1.5 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-400 focus:border-gray-400 w-full sm:w-64 bg-white">
                     <svg class="w-4 h-4 text-gray-400 absolute left-2.5 top-2.5 sm:top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
                 
-                <select name="state" onchange="this.form.submit()" class="py-2 sm:py-1.5 pl-3 pr-8 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-400 focus:border-gray-400 bg-white">
+                <select name="state" class="py-2 sm:py-1.5 pl-3 pr-8 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-400 focus:border-gray-400 bg-white">
                     <option value="">All Statuses</option>
                     {% for state_code, state_name in states %}
                     <option value="{{ state_code }}" {% if current_state == state_code %}selected{% endif %}>{{ state_name }}</option>
@@ -36,7 +43,7 @@
     </div>
 
     <!-- Data Grid -->
-    <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+    <div id="ticket-table-container" class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden animate-fade-in-up">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse responsive-table">
                 <thead>

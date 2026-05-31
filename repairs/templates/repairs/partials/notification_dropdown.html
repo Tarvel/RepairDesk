@@ -26,6 +26,7 @@
             <span class="text-sm font-semibold text-gray-800">Notifications</span>
             {% if unread_count > 0 %}
             <form hx-post="{% url 'repairs:mark_notifications_read' %}" hx-target="#notification-area" hx-swap="outerHTML">
+                {% csrf_token %}
                 <button type="submit" class="text-xs text-blue-600 hover:text-blue-800 font-medium">Mark all read</button>
             </form>
             {% endif %}
