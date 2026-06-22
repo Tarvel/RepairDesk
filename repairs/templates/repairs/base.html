@@ -1,3 +1,4 @@
+{% load repairs_tags %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -398,9 +399,11 @@
       <div class="flex items-center gap-2 sm:gap-3">
         <!-- Notifications Area -->
         <div id="notification-area"
+             x-data="{ open: false }"
              hx-get="{% url 'repairs:notification_bell' %}"
              hx-trigger="load, every 10s"
-             hx-swap="innerHTML">
+             hx-swap="innerHTML"
+             class="relative">
             <!-- Default Bell Icon Placeholder loaded instantly before the first HTMX poll -->
             <div class="relative">
                 <button class="p-2 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-50 relative">
@@ -561,6 +564,7 @@
             Actions
           </div>
 
+          {% if request.user|has_role:"frontdesk" %}
           <a
             href="{% url 'repairs:create_ticket' %}"
             @click="sidebarOpen = false"
@@ -581,6 +585,32 @@
             </svg>
             New Ticket
           </a>
+          {% else %}
+          <div
+            class="nav-link opacity-45 cursor-not-allowed select-none flex items-center justify-between"
+            title="Only Frontdesk and Admin can create tickets"
+          >
+            <div class="flex items-center gap-3">
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4"
+                ></path>
+              </svg>
+              <span>New Ticket</span>
+            </div>
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+          </div>
+          {% endif %}
         </nav>
       </aside>
 

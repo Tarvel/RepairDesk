@@ -46,16 +46,26 @@
                 </div>
                 
                 <script>
-                    // Auto-scroll timeline to bottom after HTMX swap,
-                    // but ONLY if the user is already near the bottom.
-                    // This avoids yanking them down while reading older activity.
+                    // Auto-scroll timeline to bottom after HTMX swap:
+                    // - Force scroll to bottom on the initial load/fetch
+                    // - Scroll to bottom on subsequent fetches only if user was already near the bottom
                     document.addEventListener('htmx:afterSettle', function(evt) {
                         if (evt.detail.target && evt.detail.target.id === 'ticket-timeline') {
                             var el = evt.detail.target;
-                            var distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-                            // Only auto-scroll if within 150px of the bottom
-                            if (distanceFromBottom < 150) {
+                            
+                            // Check if this is the first real content swap
+                            var isFirstLoad = !el.hasAttribute('data-initialized');
+                            
+                            if (isFirstLoad) {
+                                // Instantly scroll to bottom to show most recent messages first
                                 el.scrollTop = el.scrollHeight;
+                                el.setAttribute('data-initialized', 'true');
+                            } else {
+                                var distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+                                // Only auto-scroll if within 150px of the bottom
+                                if (distanceFromBottom < 150) {
+                                    el.scrollTop = el.scrollHeight;
+                                }
                             }
                         }
                     });

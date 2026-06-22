@@ -10,6 +10,7 @@ from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Count, Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django_fsm import TransitionNotAllowed
 
 from .models import RepairTicket, Customer, Device, Inventory, TicketNote, Notification
@@ -93,28 +94,46 @@ def dashboard_stats_partial(request):
 @login_required
 def ticket_list(request):
     """List all tickets with filtering options."""
-    tickets = RepairTicket.objects.select_related(
+    tickets_qs = RepairTicket.objects.select_related(
         'device', 'device__customer', 'assigned_technician'
     ).order_by('-created_at')
     
     # Filter by state if provided
     state = request.GET.get('state')
     if state:
-        tickets = tickets.filter(state=state)
+        tickets_qs = tickets_qs.filter(state=state)
     
-    # Search by ticket number or customer name
+    # Search by ticket number, customer name, phone, device info, or complaint
     search = request.GET.get('q')
     if search:
-        tickets = tickets.filter(
-            Q(ticket_number__icontains=search) |
-            Q(device__customer__name__icontains=search) |
-            Q(device__customer__phone__icontains=search)
+        search_query = search.strip()
+        # Strip leading '#' if present (common when copying ticket numbers like #RD-20260528-0001)
+        if search_query.startswith('#'):
+            search_query = search_query[1:]
+            
+        tickets_qs = tickets_qs.filter(
+            Q(ticket_number__icontains=search_query) |
+            Q(device__customer__name__icontains=search_query) |
+            Q(device__customer__phone__icontains=search_query) |
+            Q(device__brand__icontains=search_query) |
+            Q(device__model_name__icontains=search_query) |
+            Q(customer_complaint__icontains=search_query)
         )
     
+    # Pagination: 10 tickets per page
+    paginator = Paginator(tickets_qs, 10)
+    page_num = request.GET.get('page')
+    try:
+        tickets = paginator.page(page_num)
+    except PageNotAnInteger:
+        tickets = paginator.page(1)
+    except EmptyPage:
+        tickets = paginator.page(paginator.num_pages)
+        
     context = {
         'tickets': tickets,
         'states': RepairTicket.STATE_CHOICES,
-        'current_state': state,
+        'current_state': state or '',
         'search': search or '',
     }
     return render(request, 'repairs/ticket_list.html', context)

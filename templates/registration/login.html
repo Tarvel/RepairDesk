@@ -3,103 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - RepairDesk</title>
+    <title>Sign In - RepairDesk</title>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-        }
-    </style>
-</head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">
-                <span class="text-blue-600">Repair</span>Desk
-            </h1>
-            <p class="text-gray-500 mt-2">Enterprise Repair Management</p>
-        </div>
-        
-        {% if form.errors %}
-        <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p class="text-red-600 text-sm">Invalid username or password. Please try again.</p>
-        </div>
-        {% endif %}
-
-        <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
-            <p class="text-blue-800 text-sm font-semibold">Demo Access</p>
-            <div class="flex items-center gap-2">
-                <span class="text-sm text-gray-700 w-24">Username</span>
-                <input id="demo-username" type="text" value="tester" readonly
-                       class="flex-1 px-3 py-2 border border-blue-200 rounded-md text-sm bg-white text-gray-800">
-                <button type="button" onclick="copyCredential('demo-username')"
-                        class="px-3 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-                    Copy
-                </button>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="text-sm text-gray-700 w-24">Password</span>
-                <input id="demo-password" type="text" value="testing419" readonly
-                       class="flex-1 px-3 py-2 border border-blue-200 rounded-md text-sm bg-white text-gray-800">
-                <button type="button" onclick="copyCredential('demo-password')"
-                        class="px-3 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-                    Copy
-                </button>
-            </div>
-        </div>
-        
-        
-        <form method="post" class="space-y-6">
-            {% csrf_token %}
-            
-            <div>
-                <label for="id_username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
-                <input type="text" 
-                       name="username" 
-                       id="id_username" 
-                       required 
-                       autofocus
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                       placeholder="Enter your username">
-            </div>
-            
-            <div>
-                <label for="id_password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                <input type="password" 
-                       name="password" 
-                       id="id_password" 
-                       required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                       placeholder="Enter your password">
-            </div>
-            
-            <button type="submit" 
-                    class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium">
-                Sign In
-            </button>
-        </form>
-        
-        <p class="mt-6 text-center text-gray-500 text-sm">
-            RepairDesk Enterprise Edition v1.0
-        </p>
-    </div>
-
+    
     <script>
-        function copyCredential(inputId) {
-            const input = document.getElementById(inputId);
-            if (!input) {
-                return;
-            }
-
-            input.select();
-            input.setSelectionRange(0, 99999);
-
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(input.value);
-            } else {
-                document.execCommand('copy');
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    }
+                }
             }
         }
     </script>
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(29, 78, 216, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(33, 37, 41, 0.03) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(29, 78, 216, 0.02) 0px, transparent 50%);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
+    <!-- Main Form Container -->
+    <div class="w-full max-w-[420px] bg-white border border-gray-200/80 rounded-2xl shadow-[0_12px_40px_-12px_rgba(17,24,39,0.06)] p-6 sm:p-8 animate-fade-in-up">
+        
+        <!-- Brand Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gray-900 text-white font-bold text-lg mb-4 shadow-sm select-none">
+                RD
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 font-display">
+                Sign in to RepairDesk
+            </h1>
+            <p class="text-gray-500 text-sm mt-1.5 font-sans font-medium">
+                Enterprise Repair Workflow Management
+            </p>
+        </div>
+        
+        <!-- Error Alerts -->
+        {% if form.errors %}
+        <div class="mb-6 p-3.5 bg-red-50 border border-red-100 rounded-xl flex items-start gap-2.5">
+            <svg class="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <div class="text-xs text-red-700 font-medium leading-relaxed">
+                The username or password you entered is incorrect. Please check and try again.
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Sign In Form -->
+        <form method="post" class="space-y-5">
+            {% csrf_token %}
+            
+            <div>
+                <label for="id_username" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                    Username
+                </label>
+                <div class="relative">
+                    <input type="text" 
+                           name="username" 
+                           id="id_username" 
+                           required 
+                           autofocus
+                           class="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none transition bg-gray-50/30 font-medium text-gray-900 placeholder-gray-400"
+                           placeholder="your.username">
+                    <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
+            </div>
+            
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <label for="id_password" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                        Password
+                    </label>
+                </div>
+                <div class="relative">
+                    <input type="password" 
+                           name="password" 
+                           id="id_password" 
+                           required
+                           class="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none transition bg-gray-50/30 font-medium text-gray-900 placeholder-gray-400"
+                           placeholder="••••••••••••">
+                    <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+            </div>
+            
+            <button type="submit" 
+                    class="w-full bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer mt-2">
+                <span>Sign In to System</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+            </button>
+        </form>
+    </div>
+    
+    <!-- Footer Branding -->
+    <div class="mt-8 text-center text-gray-400 text-xs font-medium">
+        <p>RepairDesk Enterprise Core v1.1</p>
+        <p class="mt-1 text-gray-300">© 2026 RepairDesk Inc. All rights reserved.</p>
+    </div>
 </body>
 </html>

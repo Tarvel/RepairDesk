@@ -1,113 +1,139 @@
 {% extends 'repairs/base.html' %}
+{% load repairs_tags %}
 
 {% block title %}{{ customer.name }} - RepairDesk{% endblock %}
-{% block page_title %}Customer Details{% endblock %}
+{% block page_title %}
+<div class="flex items-center gap-2 text-sm sm:text-base">
+    <a href="{% url 'repairs:customer_list' %}" class="text-gray-500 hover:text-gray-900 transition-colors">Customers</a>
+    <span class="text-gray-400">/</span>
+    <span class="text-gray-900 font-medium">{{ customer.name }}</span>
+</div>
+{% endblock %}
 
 {% block content %}
 <div class="max-w-5xl mx-auto space-y-6">
     <!-- Customer Header -->
-    <div class="card bg-base-100 shadow-lg border border-gray-200">
-        <div class="card-body">
-            <div class="flex items-start justify-between flex-wrap gap-4">
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-full bg-primary-600 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0" aria-hidden="true">
-                        {{ customer.name.0|upper }}
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-bold text-slate-900">{{ customer.name }}</h1>
-                        <p class="text-slate-500">Customer since {{ customer.created_at|date:"F Y" }}</p>
-                    </div>
+    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <div class="flex items-start justify-between flex-wrap gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold flex-shrink-0" aria-hidden="true">
+                    {{ customer.name.0|upper }}
                 </div>
-                <a href="{% url 'repairs:create_ticket_for_customer' customer.id %}" class="btn btn-primary cursor-pointer">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    New Ticket
-                </a>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900 mb-0.5">{{ customer.name }}</h1>
+                    <p class="text-gray-500 text-xs sm:text-sm">Customer since {{ customer.created_at|date:"F Y" }}</p>
+                </div>
             </div>
-            
-            <dl class="grid md:grid-cols-3 gap-6 mt-6">
-                <div>
-                    <dt class="text-sm text-slate-500">Phone</dt>
-                    <dd class="font-medium text-slate-900 mt-1">{{ customer.phone }}</dd>
-                </div>
-                <div>
-                    <dt class="text-sm text-slate-500">Email</dt>
-                    <dd class="font-medium text-slate-900 mt-1">{{ customer.email|default:"-" }}</dd>
-                </div>
-                <div>
-                    <dt class="text-sm text-slate-500">Address</dt>
-                    <dd class="font-medium text-slate-900 mt-1">{{ customer.address|default:"-"|linebreaksbr }}</dd>
-                </div>
-            </dl>
+            {% if request.user|has_role:"frontdesk" %}
+            <a href="{% url 'repairs:create_ticket_for_customer' customer.id %}" class="btn-frappe-primary flex items-center justify-center gap-1.5 py-2 px-4 text-sm font-semibold cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                New Ticket
+            </a>
+            {% else %}
+            <button class="btn-frappe-primary opacity-50 cursor-not-allowed flex items-center justify-center gap-1.5 py-2 px-4 text-sm font-semibold" disabled title="Only Frontdesk and Admin can create tickets">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                New Ticket
+            </button>
+            {% endif %}
         </div>
+        
+        <dl class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 pt-6 border-t border-gray-100">
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Phone</dt>
+                <dd class="text-sm font-medium text-gray-900 mt-1.5">{{ customer.phone }}</dd>
+            </div>
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Email</dt>
+                <dd class="text-sm font-medium text-gray-900 mt-1.5">{{ customer.email|default:"-" }}</dd>
+            </div>
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Address</dt>
+                <dd class="text-sm font-medium text-gray-900 mt-1.5 leading-relaxed">{{ customer.address|default:"-"|linebreaksbr }}</dd>
+            </div>
+        </dl>
     </div>
     
     <!-- Devices & Tickets -->
-    <div class="card bg-base-100 shadow-lg border border-gray-200">
-        <div class="card-body">
-            <h2 class="card-title text-lg text-slate-900 flex items-center gap-2">
-                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                Devices & Repair History
-            </h2>
-            
+    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <h2 class="text-base font-bold text-gray-900 flex items-center gap-2 mb-4">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            Devices & Repair History
+        </h2>
+        
+        <div class="space-y-4">
             {% for device in devices %}
-            <div class="border border-gray-200 rounded-lg p-4 mt-4">
-                <div class="flex items-center justify-between mb-3">
+            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50/50">
+                <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
                     <div>
-                        <h3 class="font-semibold text-slate-900">{{ device.brand }} {{ device.model_name }}</h3>
+                        <h3 class="font-bold text-sm text-gray-900">{{ device.brand }} {{ device.model_name }}</h3>
                         {% if device.serial_number %}
-                        <p class="text-sm text-slate-500 font-mono">S/N: {{ device.serial_number }}</p>
+                        <p class="text-xs text-gray-500 font-mono mt-0.5">S/N: {{ device.serial_number }}</p>
                         {% endif %}
                     </div>
-                    <span class="text-sm text-slate-500">
+                    <span class="text-xs text-gray-400">
                         Registered {{ device.created_at|date:"M d, Y" }}
                     </span>
                 </div>
                 
                 {% if device.tickets.exists %}
-                <div class="space-y-2">
+                <div class="space-y-2 mt-3">
                     {% for ticket in device.tickets.all %}
                     <a 
                         href="{% url 'repairs:ticket_detail' ticket.id %}" 
-                        class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-smooth cursor-pointer border border-gray-100"
+                        class="flex items-center justify-between p-3 bg-white rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-colors cursor-pointer border border-gray-200"
                     >
                         <div class="flex items-center gap-3">
                             {% if ticket.state == 'intake' %}
-                            <span class="badge badge-info badge-sm">{{ ticket.get_state_display }}</span>
+                            <span class="status-badge bg-blue-50 text-blue-700 border-blue-100 py-0.5 text-[10px]">
+                                <span class="status-dot bg-blue-500"></span> Intake
+                            </span>
                             {% elif ticket.state == 'diagnosing' %}
-                            <span class="badge badge-warning badge-sm">{{ ticket.get_state_display }}</span>
+                            <span class="status-badge bg-yellow-50 text-yellow-700 border-yellow-100 py-0.5 text-[10px]">
+                                <span class="status-dot bg-yellow-500"></span> Diagnosing
+                            </span>
                             {% elif ticket.state == 'awaiting_approval' %}
-                            <span class="badge badge-secondary badge-sm">{{ ticket.get_state_display }}</span>
+                            <span class="status-badge bg-purple-50 text-purple-700 border-purple-100 py-0.5 text-[10px]">
+                                <span class="status-dot bg-purple-500"></span> Approval
+                            </span>
                             {% elif ticket.state == 'repairing' %}
-                            <span class="badge badge-accent badge-sm">{{ ticket.get_state_display }}</span>
+                            <span class="status-badge bg-indigo-50 text-indigo-700 border-indigo-100 py-0.5 text-[10px]">
+                                <span class="status-dot bg-indigo-500"></span> Repairing
+                            </span>
                             {% elif ticket.state == 'pending_qc' %}
-                            <span class="badge badge-primary badge-sm">{{ ticket.get_state_display }}</span>
+                            <span class="status-badge bg-orange-50 text-orange-700 border-orange-100 py-0.5 text-[10px]">
+                                <span class="status-dot bg-orange-500"></span> QC Pending
+                            </span>
                             {% elif ticket.state == 'ready' %}
-                            <span class="badge badge-success badge-sm">{{ ticket.get_state_display }}</span>
+                            <span class="status-badge bg-green-50 text-green-700 border-green-100 py-0.5 text-[10px]">
+                                <span class="status-dot bg-green-500"></span> Ready
+                            </span>
                             {% elif ticket.state == 'completed' %}
-                            <span class="badge badge-ghost badge-sm">{{ ticket.get_state_display }}</span>
-                            {% else %}
-                            <span class="badge badge-sm">{{ ticket.get_state_display }}</span>
+                            <span class="status-badge bg-gray-100 text-gray-700 border-gray-200 py-0.5 text-[10px]">
+                                <span class="status-dot bg-gray-500"></span> Completed
+                            </span>
                             {% endif %}
-                            <span class="text-sm font-semibold text-primary-600">{{ ticket.ticket_number }}</span>
+                            <span class="text-xs font-mono font-bold text-gray-500">#{{ ticket.ticket_number }}</span>
                         </div>
-                        <span class="text-sm text-slate-500">{{ ticket.created_at|date:"M d, Y" }}</span>
+                        <span class="text-xs text-gray-400">{{ ticket.created_at|date:"M d, Y" }}</span>
                     </a>
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-sm text-slate-400">No repair tickets for this device</p>
+                <p class="text-xs text-gray-400 italic">No repair tickets registered for this device.</p>
                 {% endif %}
             </div>
             {% empty %}
-            <div class="text-center py-12">
-                <svg class="w-12 h-12 text-slate-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <div class="text-center py-10 border border-dashed border-gray-200 rounded-lg bg-gray-50/50">
+                <svg class="w-10 h-10 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
-                <p class="text-slate-500 mt-3">No devices registered for this customer.</p>
+                <p class="text-gray-400 text-sm mt-2">No devices registered for this customer.</p>
             </div>
             {% endfor %}
         </div>
@@ -115,8 +141,8 @@
     
     <!-- Back Button -->
     <div class="flex justify-start">
-        <a href="{% url 'repairs:customer_list' %}" class="btn btn-ghost gap-2 cursor-pointer">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <a href="{% url 'repairs:customer_list' %}" class="flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors bg-white px-3.5 py-2 border border-gray-200 rounded-lg shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to Customers

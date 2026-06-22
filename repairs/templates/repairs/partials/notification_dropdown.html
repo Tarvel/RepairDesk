@@ -1,5 +1,5 @@
 <!-- Notification dropdown partial - polled via HTMX -->
-<div class="relative" x-data="{ open: false }">
+<div class="relative">
     <!-- Bell icon with badge -->
     <button @click="open = !open" class="p-2 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-50 relative">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -25,7 +25,7 @@
         <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
             <span class="text-sm font-semibold text-gray-800">Notifications</span>
             {% if unread_count > 0 %}
-            <form hx-post="{% url 'repairs:mark_notifications_read' %}" hx-target="#notification-area" hx-swap="outerHTML">
+            <form hx-post="{% url 'repairs:mark_notifications_read' %}" hx-target="#notification-area" hx-swap="innerHTML">
                 {% csrf_token %}
                 <button type="submit" class="text-xs text-blue-600 hover:text-blue-800 font-medium">Mark all read</button>
             </form>

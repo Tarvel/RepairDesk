@@ -9,7 +9,6 @@ venv/
 .venv/
 
 # Django local files
-db.sqlite3
 media/
 staticfiles/
 
@@ -20,6 +19,5 @@ staticfiles/
 # Editor
 .vscode/
 .idea/
-db.sqlite3
 docs
 reference
