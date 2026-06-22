@@ -503,6 +503,16 @@ class UserProfile(models.Model):
     
     def __str__(self):
         return f"{self.user.username} ({self.get_role_display()})"
+        
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            try:
+                existing_profile = UserProfile.objects.get(user=self.user)
+                self.pk = existing_profile.pk
+            except UserProfile.DoesNotExist:
+                pass
+        super().save(*args, **kwargs)
+
 
 
 from django.db.models.signals import post_save
