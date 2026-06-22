@@ -113,6 +113,28 @@
                 </svg>
             </button>
         </form>
+        
+        <!-- Demo Credentials Box -->
+        <div class="mt-6 pt-5 border-t border-gray-100">
+            <div class="bg-blue-50/50 border border-blue-100/50 rounded-xl p-3.5 text-xs text-blue-900">
+                <div class="flex items-center gap-1.5 font-bold mb-1.5 text-blue-950">
+                    <svg class="w-3.5 h-3.5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Demo Account / Sandbox</span>
+                </div>
+                <div class="space-y-1.5 text-blue-800/90 font-medium">
+                    <div class="flex justify-between items-center bg-white/60 px-2.5 py-1.5 rounded-lg border border-blue-100/30">
+                        <span>Username: <strong class="text-blue-950 font-bold select-all">Tester</strong></span>
+                        <button type="button" onclick="navigator.clipboard.writeText('Tester'); const o = this.innerText; this.innerText='Copied!'; setTimeout(() => this.innerText = o, 1500);" class="text-[10px] text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">Copy</button>
+                    </div>
+                    <div class="flex justify-between items-center bg-white/60 px-2.5 py-1.5 rounded-lg border border-blue-100/30">
+                        <span>Password: <strong class="text-blue-950 font-bold select-all">strongpassword</strong></span>
+                        <button type="button" onclick="navigator.clipboard.writeText('strongpassword'); const o = this.innerText; this.innerText='Copied!'; setTimeout(() => this.innerText = o, 1500);" class="text-[10px] text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- Footer Branding -->
