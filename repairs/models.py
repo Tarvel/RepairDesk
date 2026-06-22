@@ -511,6 +511,8 @@ from django.dispatch import receiver
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_or_save_user_profile(sender, instance, created, **kwargs):
     """Ensure every User model instance has a matching UserProfile."""
+    if kwargs.get('raw', False):
+        return
     if created:
         role = 'admin' if instance.is_superuser else 'frontdesk'
         UserProfile.objects.get_or_create(user=instance, defaults={'role': role})
